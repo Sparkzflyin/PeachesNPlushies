@@ -1,0 +1,840 @@
+:root {
+  --mint-green: #a2d5c6; /* Lighter, less saturated mint */
+  --dark-brown: #5c4033; /* Dark, but less intense brown for headlines */
+  --light-brown: #7a5c58; /* Softer brown for body text */
+  --cream: #f7f6f1; /* A more neutral, less yellow off-white */
+  --pink: #e88d9e; /* A softer, dustier pink */
+}
+
+body {
+  font-family: "Nunito", sans-serif;
+  background-color: var(--cream);
+  color: var(--light-brown);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  line-height: 1.6;
+  font-size: 1.1rem; /* Slightly larger base font size */
+}
+
+main {
+  padding: 2rem;
+  flex-grow: 1;
+  max-width: 100%;
+  margin: 0 auto; /* Center the main content */
+}
+
+.main-wide {
+  max-width: 1200px;
+}
+
+.faq-item {
+  text-align: center; /* Center the questions and answers */
+}
+
+h2 {
+  text-align: center; /* Center the 'Frequently Asked Questions' heading */
+}
+
+h2,
+h3,
+h4 {
+  color: var(--dark-brown);
+  font-weight: 700; /* Assuming Nunito's bold weight is 700 */
+}
+
+.new-arrivals h4 {
+  font-weight: 400; /* Lighter weight */
+  text-transform: uppercase;
+  letter-spacing: 2px; /* Add some spacing for style */
+  font-size: 1.2rem;
+}
+
+.btn {
+  background-color: transparent;
+  color: var(--pink);
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  border-radius: 20px;
+  border: 2px solid var(--pink);
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.btn:hover {
+  background-color: var(--pink);
+  color: var(--cream);
+  transform: translateY(-2px);
+}
+
+.btn-solid {
+  background-color: var(--pink);
+  color: var(--cream);
+  border-color: var(--pink); /* Ensure solid button has a matching border */
+}
+
+.btn-solid:hover {
+  background-color: #d45a75; /* A slightly darker pink */
+  border-color: #d45a75;
+  color: var(--cream);
+  transform: translateY(-2px);
+}
+
+.new-arrivals {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.carousel {
+  max-width: 788px; /* Approx 4 cards wide now */
+  margin: 0 auto; /* Centering is now handled by the flex container */
+  gap: 1rem;
+  display: flex;
+}
+
+.carousel-item-inner {
+  padding: 1rem;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  transition:
+    transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    box-shadow 0.4s ease;
+  cursor: pointer;
+}
+
+.carousel-item-inner:hover {
+  transform: scale(1.05) rotate(2deg);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.carousel-item-inner img {
+  max-width: 150px;
+  border-radius: 5px;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Lightbox Styles */
+.lightbox {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lightbox.active {
+  display: flex;
+  opacity: 1;
+}
+
+.lightbox-content {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  transform: scale(0.8);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.lightbox.active .lightbox-content {
+  transform: scale(1);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.lightbox-close:hover {
+  color: var(--pink);
+}
+
+.catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 100%;
+}
+
+.plushie-details,
+.plushie-series {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.plushie-image,
+.plushie-image-group {
+  flex: 1;
+}
+
+.plushie-series .plushie-image {
+  text-align: right;
+}
+
+.plushie-info {
+  flex: 2;
+}
+
+.plushie-image img,
+.plushie-image-group img {
+  max-width: 100%;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.plushie-image img:hover,
+.plushie-image-group img:hover {
+  transform: scale(1.05);
+}
+
+.plushie-image-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.workshop-contact {
+  display: flex;
+  gap: 2rem;
+}
+
+.workshop-timeline {
+  flex: 1;
+  background-color: var(--mint-green);
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.workshop-timeline ul {
+  list-style: none;
+  padding-left: 1rem;
+  border-left: 2px solid var(--dark-brown);
+}
+
+.workshop-timeline li {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.workshop-timeline li::before {
+  content: "";
+  position: absolute;
+  left: -1.5rem;
+  top: 0.25rem;
+  width: 1rem;
+  height: 1rem;
+  background-color: var(--dark-brown);
+  border-radius: 50%;
+}
+
+.contact-form-section {
+  flex: 2;
+  background-color: #f9f9f9;
+  padding: 2rem;
+  border-radius: 10px;
+}
+
+.contact-form-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contact-form-section input,
+.contact-form-section textarea {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem 0;
+  margin-top: 2rem;
+  background-color: var(--dark-brown);
+  color: var(--cream);
+}
+
+/* Sticky Reveal Footer */
+body.reveal-footer-active {
+  display: block !important;
+  background-color: var(--dark-brown) !important;
+}
+
+.site-content-wrapper {
+  background-color: var(--cream);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+footer.reveal-footer {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  z-index: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* New Hero Header Styles */
+.hero-header {
+  background-color: var(--mint-green);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 50vh; /* Adjust as needed */
+  justify-content: center;
+  text-align: center;
+}
+
+.hero-header-simple {
+  min-height: auto;
+  background-color: #ffffff; /* Or a very light grey */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.hero-header nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 1.5rem 2rem;
+  box-sizing: border-box; /* Ensures padding is included in width */
+}
+
+.hero-header-simple nav {
+  position: static;
+}
+
+.brand-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dark-brown);
+}
+
+.hero-header nav > ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.hero-header nav ul li {
+  margin: 0 0.5rem;
+}
+
+.hero-header nav ul li a {
+  text-decoration: none;
+  color: var(--dark-brown);
+  font-family: "Fredoka One", cursive;
+  font-size: 1.2rem;
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
+  border: 2px solid transparent;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.hero-header nav ul li a:hover {
+  color: var(--pink);
+  border-color: var(--pink);
+  transform: translateY(-4px) scale(1.05);
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.hero-header nav ul:hover li a:not(:hover) {
+  opacity: 0.5;
+  transform: scale(0.95);
+}
+
+.hero-header .hero-text {
+  color: var(--dark-brown);
+  max-width: 800px;
+  margin: 0 auto;
+  padding-top: 5rem; /* Ensure it doesn't overlap the logo */
+  position: relative;
+  z-index: 1; /* Keep text above background if any */
+}
+
+.hero-header .hero-text h2 {
+  font-family: "Fredoka One", cursive;
+  font-size: 3.5rem;
+  color: var(--cream);
+  margin-bottom: 0.5rem;
+  text-shadow: 4px 4px 0px var(--pink); /* Playful shadow */
+  animation: bounceInDown 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) both;
+}
+
+.hero-header .hero-text h3 {
+  font-family: "Fredoka One", cursive;
+  font-size: 2.2rem;
+  color: var(--dark-brown);
+  margin-bottom: 1rem;
+  animation: bounceInDown 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.2s both;
+}
+
+.hero-header .hero-text .hero-byline {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--dark-brown);
+  margin-bottom: 2rem;
+  animation: fadeIn 1s ease 0.5s both;
+}
+
+.hero-header .hero-text .btn {
+  font-size: 1.25rem;
+  padding: 1rem 2.5rem;
+  border-radius: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.7s both;
+}
+
+/* Animations */
+@keyframes bounceInDown {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Footer Styles */
+.social-links {
+  margin-bottom: 1rem;
+}
+
+.social-links a {
+  color: var(--cream);
+  text-decoration: none;
+  margin: 0 0.75rem;
+  transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+  color: var(--pink);
+}
+
+.footer-links {
+  margin-bottom: 1rem;
+}
+
+.footer-links a {
+  color: var(--cream);
+  text-decoration: none;
+  margin: 0 0.75rem;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--pink);
+}
+
+.copyright {
+  font-size: 0.9rem;
+  color: #e0e0e0; /* A slightly lighter shade for the copyright text */
+}
+
+.senscode-link {
+  color: var(--cream);
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.senscode-link:hover {
+  color: var(--pink);
+}
+
+/* Hero Byline */
+.hero-byline {
+  font-size: 1.1rem;
+  font-weight: 400;
+  opacity: 0.9;
+  margin-top: 1rem;
+}
+
+/* Featured Collection Section */
+.featured-collection {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.featured-image,
+.featured-text {
+  flex: 1;
+}
+
+.featured-image img {
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.featured-text h2 {
+  font-size: 2.5rem;
+}
+
+/* Scroll-triggered Animations */
+.animated-section {
+  opacity: 0;
+  transition:
+    opacity 0.8s ease-out,
+    transform 0.8s ease-out;
+}
+
+.animated-section.fade-in-left {
+  transform: translateX(-50px);
+}
+
+.animated-section.fade-in-right {
+  transform: translateX(50px);
+}
+
+.animated-section.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Behind the Seams Banner */
+.behind-the-seams-banner {
+  background-color: var(--mint-green);
+  color: var(--dark-brown);
+  text-align: center;
+  padding: 6rem 2rem;
+  margin-bottom: 2rem;
+}
+
+.banner-content h2 {
+  color: var(--cream);
+  font-family: "Fredoka One", cursive;
+  font-size: 3.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 4px 4px 0px var(--pink); /* Playful shadow */
+  animation: bounceInDown 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) both;
+}
+
+/* Category Filters */
+.category-filters {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 3rem 0 2rem 0;
+}
+
+.filter-btn {
+  background: none;
+  border: none;
+  color: var(--light-brown);
+  font-size: 1.1rem;
+  font-family: "Nunito", sans-serif;
+  cursor: pointer;
+  padding-bottom: 0.25rem;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  color: var(--dark-brown);
+  border-bottom-color: var(--pink);
+}
+
+/* Product Grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  padding: 0 2rem;
+}
+
+.grid-item {
+  text-align: center;
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.grid-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.grid-item img {
+  max-width: 100%;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+
+.grid-item h4 {
+  margin: 0.5rem 0;
+}
+
+.grid-item p {
+  font-size: 0.9rem;
+  color: var(--light-brown);
+  margin-bottom: 1rem;
+}
+
+/* Series Interaction */
+.plushie-image-group:hover img {
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* Fat Word Interaction */
+.fat-word {
+  display: inline-block;
+  transition:
+    transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    color 0.1s ease;
+  cursor: pointer;
+  transform-origin: center;
+}
+
+.fat-word:active {
+  transform: scale(1.3) rotate(-3deg);
+  -webkit-text-stroke: 2px var(--pink);
+  color: var(--cream);
+  z-index: 10;
+  position: relative;
+}
+
+.plushie-image-group:hover img:not(:hover) {
+  opacity: 0.5;
+}
+
+/* Playful Headings in Collection */
+.plushie-info h2,
+.plushie-info h3 {
+  color: var(--mint-green);
+  font-family: "Fredoka One", cursive;
+  font-size: 2.8rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+/* Brand Link and Logo */
+.brand-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  gap: 0.5rem;
+}
+
+.brand-logo {
+  height: 80px;
+  width: auto;
+}
+
+/* About Page Specifics */
+.about-section {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding: 3rem 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.about-section .text-content,
+.about-section .image-content {
+  flex: 1;
+}
+
+.about-section h2 {
+  text-align: left;
+}
+
+.image-placeholder {
+  border: 3px dotted var(--mint-green);
+  background-color: #fdfdfb;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  width: 100%;
+  color: var(--light-brown);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.philosophy-section {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.philosophy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 2rem auto 0;
+}
+
+.philosophy-item {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.philosophy-item .image-placeholder {
+  min-height: 150px;
+  margin-bottom: 1rem;
+}
+
+.process-gallery {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 2rem auto 0;
+}
+
+.cta-section {
+  background-color: var(--dark-brown);
+  color: var(--cream);
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.cta-section h2 {
+  color: var(--cream);
+  font-family: "Fredoka One", cursive;
+  font-size: 2.5rem;
+}
+
+.heading-subtitle {
+  font-family: "Nunito", sans-serif;
+  color: var(--light-brown);
+  font-weight: 400;
+  font-size: 1.3rem;
+  display: block; /* Make it appear on a new line below the main heading */
+  margin-top: 0.25rem;
+}
+
+/* Dropdown Navigation */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: var(--mint-green);
+  min-width: 180px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 100; /* Ensure it's above the canvas and other elements */
+  border-radius: 10px;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem 0;
+  flex-direction: column !important; /* Override the flex row from nav ul */
+  margin-top: 10px !important;
+}
+
+/* Adding a little triangle pointer to the dropdown */
+.dropdown-content::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -10px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent var(--mint-green) transparent;
+}
+
+.dropdown.dropdown-active .dropdown-content {
+  display: flex;
+}
+
+.dropdown-content li {
+  margin: 0 !important; /* Override standard nav li margins */
+  list-style: none;
+}
+
+.hero-header nav ul li .dropdown-content a {
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  border: none;
+  border-radius: 0;
+  color: var(--dark-brown);
+  font-size: 1rem;
+}
+
+.hero-header nav ul li .dropdown-content a:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: none; /* remove hover transform for dropdown items */
+  color: var(--pink);
+}
+
