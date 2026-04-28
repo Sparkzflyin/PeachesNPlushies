@@ -8,12 +8,63 @@
 // Optional:
 //   LOOPS_SOURCE             — string label written to contact metadata
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Bounded segments prevent the catastrophic backtracking sonar warns about
+// (sonarjs/slow-regex). Real email validation is delegated to Loops/Stripe.
+const EMAIL_RE = /^[^\s@]{1,254}@[^\s@]{1,253}\.[^\s@]{1,253}$/;
+
+const LOOPS_BASE = "https://app.loops.so/api/v1";
+const LOOPS_CREATE_URL = `${LOOPS_BASE}/contacts/create`;
+const LOOPS_UPDATE_URL = `${LOOPS_BASE}/contacts/update`;
+
+const CONTENT_TYPE_HEADER = "Content-Type";
+const JSON_CONTENT_TYPE = "application/json";
+
+const HTTP_OK = 200;
+const HTTP_BAD_REQUEST = 400;
+const HTTP_METHOD_NOT_ALLOWED = 405;
+const HTTP_CONFLICT = 409;
+const HTTP_INTERNAL_ERROR = 500;
+const HTTP_BAD_GATEWAY = 502;
+
+const ERROR_DETAIL_MAX_LENGTH = 200;
+
+function jsonHeaders(apiKey) {
+  return {
+    [CONTENT_TYPE_HEADER]: JSON_CONTENT_TYPE,
+    Authorization: `Bearer ${apiKey}`,
+  };
+}
+
+function parseRequestBody(rawBody) {
+  if (typeof rawBody === "string") {
+    try {
+      return JSON.parse(rawBody);
+    } catch (jsonErr) {
+      // Body wasn't JSON — try urlencoded form data instead.
+      console.warn("[subscribe] JSON parse failed, falling back to urlencoded:", jsonErr.message);
+      return Object.fromEntries(new URLSearchParams(rawBody));
+    }
+  }
+  if (rawBody && typeof rawBody === "object" && Buffer.isBuffer(rawBody)) {
+    return JSON.parse(rawBody.toString("utf8"));
+  }
+  return rawBody;
+}
+
+async function readErrorDetail(response) {
+  try {
+    const text = await response.text();
+    return text.slice(0, ERROR_DETAIL_MAX_LENGTH);
+  } catch (readErr) {
+    console.warn("[subscribe] could not read upstream error body:", readErr.message);
+    return "";
+  }
+}
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
-    return res.status(405).json({ error: "method_not_allowed" });
+    return res.status(HTTP_METHOD_NOT_ALLOWED).json({ error: "method_not_allowed" });
   }
 
   const apiKey = process.env.LOOPS_API_KEY;
@@ -21,75 +72,57 @@ export default async function handler(req, res) {
   const source = process.env.LOOPS_SOURCE || "pnp_newsletter_homepage";
 
   if (!apiKey) {
-    return res.status(500).json({ error: "missing_loops_api_key" });
+    return res.status(HTTP_INTERNAL_ERROR).json({ error: "missing_loops_api_key" });
   }
 
-  // Body parsing — Vercel may give us a Buffer/string depending on content-type
-  let body = req.body;
-  if (typeof body === "string") {
-    try {
-      body = JSON.parse(body);
-    } catch {
-      // try urlencoded
-      body = Object.fromEntries(new URLSearchParams(body));
-    }
-  } else if (body && typeof body === "object" && Buffer.isBuffer(body)) {
-    try {
-      body = JSON.parse(body.toString("utf8"));
-    } catch {
-      return res.status(400).json({ error: "invalid_body" });
-    }
+  let body;
+  try {
+    body = parseRequestBody(req.body);
+  } catch (parseErr) {
+    console.warn("[subscribe] body parse failed:", parseErr.message);
+    return res.status(HTTP_BAD_REQUEST).json({ error: "invalid_body" });
   }
 
   const email = (body?.email || "").toString().trim().toLowerCase();
   if (!EMAIL_RE.test(email)) {
-    return res.status(400).json({ error: "invalid_email" });
+    return res.status(HTTP_BAD_REQUEST).json({ error: "invalid_email" });
   }
 
-  // Create or update the contact in Loops
-  const payload = {
-    email,
-    source,
-    subscribed: true,
-  };
+  const payload = { email, source, subscribed: true };
   if (mailingListId) {
     payload.mailingLists = { [mailingListId]: true };
   }
 
   try {
-    const upstream = await fetch("https://app.loops.so/api/v1/contacts/create", {
+    const upstream = await fetch(LOOPS_CREATE_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
+      headers: jsonHeaders(apiKey),
       body: JSON.stringify(payload),
     });
 
-    if (upstream.status === 409) {
-      // Already subscribed — update instead so they go on the list if they weren't
-      const update = await fetch("https://app.loops.so/api/v1/contacts/update", {
+    if (upstream.status === HTTP_CONFLICT) {
+      // Already subscribed — update so they get added to the mailing list if they weren't
+      const update = await fetch(LOOPS_UPDATE_URL, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
+        headers: jsonHeaders(apiKey),
         body: JSON.stringify(payload),
       });
       if (!update.ok) {
-        const text = await update.text().catch(() => "");
-        return res.status(502).json({ error: "loops_update_failed", detail: text.slice(0, 200) });
+        const detail = await readErrorDetail(update);
+        return res.status(HTTP_BAD_GATEWAY).json({ error: "loops_update_failed", detail });
       }
-      return res.status(200).json({ ok: true, status: "updated" });
+      return res.status(HTTP_OK).json({ ok: true, status: "updated" });
     }
 
     if (!upstream.ok) {
-      const text = await upstream.text().catch(() => "");
-      return res.status(502).json({ error: "loops_create_failed", detail: text.slice(0, 200) });
+      const detail = await readErrorDetail(upstream);
+      return res.status(HTTP_BAD_GATEWAY).json({ error: "loops_create_failed", detail });
     }
 
-    return res.status(200).json({ ok: true, status: "created" });
+    return res.status(HTTP_OK).json({ ok: true, status: "created" });
   } catch (err) {
-    return res.status(502).json({ error: "loops_unreachable", detail: String(err).slice(0, 200) });
+    return res
+      .status(HTTP_BAD_GATEWAY)
+      .json({ error: "loops_unreachable", detail: String(err).slice(0, ERROR_DETAIL_MAX_LENGTH) });
   }
 }

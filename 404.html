@@ -88,9 +88,11 @@
     </footer>
 
     <script>
-      // Pick a random plushie photo as the runaway
+      // Pick a random plushie photo as the runaway. Visual-only —
+      // non-cryptographic Math.random is intentional here.
       (function () {
-        const n = Math.floor(Math.random() * 76) + 1;
+        const TOTAL_PHOTOS = 76;
+        const n = Math.floor(Math.random() * TOTAL_PHOTOS) + 1; // NOSONAR
         const img = document.querySelector(".lost-plushie .runaway");
         if (img) img.src = `Photos/webp/${n}.webp`;
       })();

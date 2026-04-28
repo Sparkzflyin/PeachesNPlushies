@@ -73,8 +73,8 @@
         aria-live="polite"
       >
         <p class="eyebrow">The Next Drop</p>
-        <h3 class="drop-name"></h3>
-        <p class="drop-meta"></p>
+        <h3 class="drop-name">Loading next drop&hellip;</h3>
+        <p class="drop-meta">&nbsp;</p>
         <div class="countdown" role="timer" aria-label="Time until next drop">
           <div class="unit"><span class="num" data-d>0</span><span class="label">days</span></div>
           <div class="unit"><span class="num" data-h>0</span><span class="label">hours</span></div>
@@ -190,8 +190,8 @@
           />
           <button type="submit" class="btn btn-solid">Notify Me</button>
         </form>
-        <p class="form-success" role="status">✦ You&rsquo;re on the list. Talk soon. ✦</p>
-        <p class="form-error" role="alert">That didn&rsquo;t go through. Mind trying again?</p>
+        <output class="form-success">✦ You&rsquo;re on the list. Talk soon. ✦</output>
+        <output class="form-error" aria-live="assertive">That didn&rsquo;t go through. Mind trying again?</output>
       </section>
     </main>
 
@@ -214,10 +214,12 @@
       </p>
     </footer>
 
-    <!-- Lightbox Modal -->
-    <div id="lightbox" class="lightbox">
-      <span class="lightbox-close">&times;</span>
-      <img class="lightbox-content" id="lightboxImg" />
+    <!-- Lightbox Modal — overlay around an enlarged plushie photo. The img's
+         alt is set dynamically by openLightbox() so it always describes the
+         currently-shown plushie. -->
+    <div id="lightbox" class="lightbox" aria-hidden="true">
+      <button type="button" class="lightbox-close" aria-label="Close lightbox">&times;</button>
+      <img class="lightbox-content" id="lightboxImg" alt="" />
     </div>
     <!-- Vercel Analytics + Speed Insights (no-ops off-Vercel) -->
     <script>
