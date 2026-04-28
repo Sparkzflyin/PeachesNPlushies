@@ -1,0 +1,17 @@
+# Normalize line endings to LF for cross-OS consistency.
+# Windows checkouts will still see CRLF locally if `core.autocrlf=true`,
+# but the repo always stores LF — keeps `git diff` clean across platforms.
+* text=auto eol=lf
+
+# Treat binary assets as binary (no eol munging, no diff).
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.pdf binary

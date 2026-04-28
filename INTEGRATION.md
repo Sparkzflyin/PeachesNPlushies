@@ -86,19 +86,19 @@ Walk through the prompts. The `vercel.json` and `package.json` are already confi
 
 Vercel dashboard → your project → Settings → Environment Variables. Add:
 
-| Name | Value | Where it's used |
-|---|---|---|
-| `SANITY_PROJECT_ID` | from Sanity dashboard | client + server |
-| `SANITY_DATASET` | `production` (or yours) | client + server |
-| `SANITY_API_VERSION` | `2024-01-01` | client + server |
-| `LOOPS_API_KEY` | from Loops settings | server only |
-| `LOOPS_MAILING_LIST_ID` | from Loops mailing list URL | server only |
-| `LOOPS_DROP_EVENT_NAME` | `drop_published` (must match your loop) | server only |
-| `SANITY_WEBHOOK_SECRET` | a strong random string you make up | server only |
-| `SANITY_WRITE_TOKEN` | from Sanity → API → Tokens (Editor scope) | server only — optional, used to mark drops as already-emailed so they don't double-send |
-| `SNIPCART_PUBLIC_API_KEY` | from Snipcart → Account → API Keys → Public | client (safe to expose) |
-| `SNIPCART_VERSION` | e.g. `3.7.1` | client. Pin so vendor updates can't break checkout silently |
-| `SITE_ORIGIN` | `https://yourdomain.vercel.app` | optional, for canonical URLs |
+| Name                      | Value                                       | Where it's used                                                                         |
+| ------------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `SANITY_PROJECT_ID`       | from Sanity dashboard                       | client + server                                                                         |
+| `SANITY_DATASET`          | `production` (or yours)                     | client + server                                                                         |
+| `SANITY_API_VERSION`      | `2024-01-01`                                | client + server                                                                         |
+| `LOOPS_API_KEY`           | from Loops settings                         | server only                                                                             |
+| `LOOPS_MAILING_LIST_ID`   | from Loops mailing list URL                 | server only                                                                             |
+| `LOOPS_DROP_EVENT_NAME`   | `drop_published` (must match your loop)     | server only                                                                             |
+| `SANITY_WEBHOOK_SECRET`   | a strong random string you make up          | server only                                                                             |
+| `SANITY_WRITE_TOKEN`      | from Sanity → API → Tokens (Editor scope)   | server only — optional, used to mark drops as already-emailed so they don't double-send |
+| `SNIPCART_PUBLIC_API_KEY` | from Snipcart → Account → API Keys → Public | client (safe to expose)                                                                 |
+| `SNIPCART_VERSION`        | e.g. `3.7.1`                                | client. Pin so vendor updates can't break checkout silently                             |
+| `SITE_ORIGIN`             | `https://yourdomain.vercel.app`             | optional, for canonical URLs                                                            |
 
 Re-deploy (`npx vercel --prod`) so the build script picks up the new env vars and writes them into `config.js`.
 
@@ -125,7 +125,7 @@ Save. Now publishing a `drop` document triggers a Loops email.
 1. **Newsletter signup**: open the homepage on the live site, type an email into the "Get the next drop, 24h early" form, submit. Check Loops → Audience to see the contact appear on your mailing list.
 2. **Drop email**: in Sanity Studio, create a new `Drop` doc with `sendEmailOnPublish: true` and a `dropAt` in the near future. Publish it. Within ~30 seconds the Loops loop should send the email to anyone on the mailing list. Check Loops → Loops → your loop → Activity to see the run.
 3. **Snipcart checkout**: open `adopt.html`, click "Adopt Pippa". Snipcart's drawer should slide in showing Pippa in the cart. Click "Checkout" — in TEST mode, use Stripe's test card `4242 4242 4242 4242`.
-4. **Hardcoded fallback**: temporarily blank out `SANITY_PROJECT_ID` *or* `SNIPCART_PUBLIC_API_KEY` in Vercel and redeploy. The site should fall back gracefully — no errors, just plain links to `/store.html` for adopt CTAs and hardcoded plushies on the page.
+4. **Hardcoded fallback**: temporarily blank out `SANITY_PROJECT_ID` _or_ `SNIPCART_PUBLIC_API_KEY` in Vercel and redeploy. The site should fall back gracefully — no errors, just plain links to `/store.html` for adopt CTAs and hardcoded plushies on the page.
 
 ## What lives where
 
@@ -146,11 +146,13 @@ Save. Now publishing a `drop` document triggers a Loops email.
 Check Vercel function logs (Deployments → click deploy → Functions → `/api/subscribe`). Most likely `LOOPS_API_KEY` is missing or wrong.
 
 **Adopt page still shows hardcoded plushies after Sanity setup**
+
 - Open DevTools → Network. Look for a request to `*.apicdn.sanity.io`. If 404, your `SANITY_PROJECT_ID` is wrong.
 - If the request returns `result: []`, your dataset has no `plushie` documents yet.
 - If it succeeds with data but the page doesn't update, check the Console for `[sanity]` warnings.
 
 **Webhook fires but no email arrives**
+
 1. Loops → Loops → your loop → Activity. If the run is missing, the webhook never reached Loops — check Vercel function logs for `/api/sanity-webhook` errors.
 2. If the run is there but failed, check the loop's audience filter — most likely your test contacts aren't on the mailing list.
 3. Check spam.

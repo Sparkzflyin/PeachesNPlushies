@@ -25,7 +25,9 @@
     }
     const res = await fetch(url.toString());
     if (!res.ok) {
-      console.warn(`[sanity] query failed: ${res.status}`);
+      if (typeof window !== "undefined" && window.console) {
+        window.console.warn(`[sanity] query failed: ${res.status}`);
+      }
       return null;
     }
     const json = await res.json();
@@ -37,9 +39,8 @@
   // Returns null if the ref looks malformed.
   function imageUrl(assetOrRef, opts = {}) {
     if (!assetOrRef || !isConfigured()) return null;
-    const ref = typeof assetOrRef === "string"
-      ? assetOrRef
-      : assetOrRef?.asset?._ref || assetOrRef?._ref;
+    const ref =
+      typeof assetOrRef === "string" ? assetOrRef : assetOrRef?.asset?._ref || assetOrRef?._ref;
     if (!ref || !ref.startsWith("image-")) return null;
 
     const parts = ref.split("-");

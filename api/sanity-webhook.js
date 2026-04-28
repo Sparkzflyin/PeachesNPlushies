@@ -38,9 +38,7 @@ function verifySignature(secret, signatureHeader, rawBody) {
   const sigHex = parts.v1;
   if (!ts || !sigHex) return false;
 
-  const expected = createHmac("sha256", secret)
-    .update(`${ts}.${rawBody}`)
-    .digest("hex");
+  const expected = createHmac("sha256", secret).update(`${ts}.${rawBody}`).digest("hex");
 
   try {
     return timingSafeEqual(Buffer.from(sigHex, "hex"), Buffer.from(expected, "hex"));
@@ -122,14 +120,10 @@ export default async function handler(req, res) {
     });
     if (!loopsRes.ok) {
       const text = await loopsRes.text().catch(() => "");
-      return res
-        .status(502)
-        .json({ error: "loops_event_failed", detail: text.slice(0, 200) });
+      return res.status(502).json({ error: "loops_event_failed", detail: text.slice(0, 200) });
     }
   } catch (err) {
-    return res
-      .status(502)
-      .json({ error: "loops_unreachable", detail: String(err).slice(0, 200) });
+    return res.status(502).json({ error: "loops_unreachable", detail: String(err).slice(0, 200) });
   }
 
   // Best-effort: stamp emailSentAt on the drop so we don't double-send if

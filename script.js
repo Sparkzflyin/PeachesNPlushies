@@ -2,9 +2,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   // --- Sanity hydration (runs first so the rest of the init sees real data) ---
   // No-op if Sanity isn't configured (window.PNP_CONFIG.sanityProjectId empty).
   if (window.PNP_SANITY && window.PNP_SANITY.isConfigured()) {
-    await Promise.all([hydrateAdoptFromSanity(), hydrateNextDropFromSanity()]).catch(
-      (err) => console.warn("[sanity] hydration failed:", err),
-    );
+    try {
+      await Promise.all([hydrateAdoptFromSanity(), hydrateNextDropFromSanity()]);
+    } catch (err) {
+      // Hydration is best-effort: if Sanity is unreachable or returns malformed
+      // data, we silently fall back to the hardcoded HTML. Surface to the
+      // browser console for debugging only.
+      if (typeof window !== "undefined" && window.console) {
+        window.console.warn("[sanity] hydration failed:", err);
+      }
+    }
   }
 
   async function hydrateAdoptFromSanity() {
@@ -57,8 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const isAdopted = p.status === "adopted";
         const cardClass = `adopt-card grid-item ${status.classMod}`.trim();
         const imgUrl =
-          window.PNP_SANITY.imageUrl(p.image, { w: 600, h: 750, fit: "crop", q: 80 }) ||
-          "";
+          window.PNP_SANITY.imageUrl(p.image, { w: 600, h: 750, fit: "crop", q: 80 }) || "";
         // Choose CTA: Snipcart button (if configured + plushie has price + id),
         // else a plain link to /store.html, else "No longer available" tag.
         const itemId = p.snipcartId || p.slug;
@@ -83,8 +89,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             : "";
 
         const specs = [];
-        if (p.snack) specs.push(`<li><span class="label">Snack of choice</span><span class="value">${escapeHTML(p.snack)}</span></li>`);
-        if (p.stitchedOn) specs.push(`<li><span class="label">Stitched on</span><span class="value">${escapeHTML(formatDate(p.stitchedOn))}</span></li>`);
+        if (p.snack)
+          specs.push(
+            `<li><span class="label">Snack of choice</span><span class="value">${escapeHTML(p.snack)}</span></li>`,
+          );
+        if (p.stitchedOn)
+          specs.push(
+            `<li><span class="label">Stitched on</span><span class="value">${escapeHTML(formatDate(p.stitchedOn))}</span></li>`,
+          );
         if (typeof p.weighted === "boolean") {
           const w = p.weighted ? `Yes${p.weightGrams ? ` &middot; ${p.weightGrams}g` : ""}` : "No";
           specs.push(`<li><span class="label">Weighted</span><span class="value">${w}</span></li>`);
@@ -190,15 +202,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     // Create clones for infinite loop
-    photos.forEach((photo) =>
-      carouselTrack.appendChild(createCarouselItem(photo)),
-    );
-    photos.forEach((photo) =>
-      carouselTrack.appendChild(createCarouselItem(photo)),
-    );
-    photos.forEach((photo) =>
-      carouselTrack.appendChild(createCarouselItem(photo)),
-    );
+    photos.forEach((photo) => carouselTrack.appendChild(createCarouselItem(photo)));
+    photos.forEach((photo) => carouselTrack.appendChild(createCarouselItem(photo)));
+    photos.forEach((photo) => carouselTrack.appendChild(createCarouselItem(photo)));
 
     // --- Styling ---
     const oldStyle = document.head.querySelector("style");
@@ -412,10 +418,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         btn.classList.add("active");
         const filterValue = btn.getAttribute("data-filter");
         gridItems.forEach((item) => {
-          if (
-            filterValue === "all" ||
-            item.getAttribute("data-category") === filterValue
-          ) {
+          if (filterValue === "all" || item.getAttribute("data-category") === filterValue) {
             item.style.display = "block";
           } else {
             item.style.display = "none";
@@ -432,9 +435,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   );
   headingsToInterlace.forEach((el) => {
     const words = el.textContent.trim().split(/\s+/);
-    el.innerHTML = words
-      .map((word) => `<span class="fat-word">${word}</span>`)
-      .join(" ");
+    el.innerHTML = words.map((word) => `<span class="fat-word">${word}</span>`).join(" ");
   });
 
   // --- Reveal Footer ---
@@ -488,9 +489,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // --- Background Confetti (toned-down, brand-palette pastel motes) ---
-  const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (!prefersReducedMotion) {
     const canvas = document.createElement("canvas");
@@ -542,9 +541,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
       reset(initial = false) {
         this.x = Math.random() * width;
-        this.y = initial
-          ? Math.random() * height
-          : window.scrollY - 40;
+        this.y = initial ? Math.random() * height : window.scrollY - 40;
         this.speed = 0.25 + Math.random() * 0.55; // much slower
         this.size = 4 + Math.random() * 7;
         this.drift = (Math.random() - 0.5) * 0.6;
@@ -667,15 +664,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const writeWishlist = (items) => {
     localStorage.setItem(WISHLIST_KEY, JSON.stringify(items));
-    window.dispatchEvent(
-      new CustomEvent("wishlist:change", { detail: { items } }),
-    );
+    window.dispatchEvent(new CustomEvent("wishlist:change", { detail: { items } }));
   };
 
   const itemKey = (item) => `${item.name}|${item.image}`;
 
-  const inWishlist = (item) =>
-    readWishlist().some((i) => itemKey(i) === itemKey(item));
+  const inWishlist = (item) => readWishlist().some((i) => itemKey(i) === itemKey(item));
 
   const toggleWishlist = (item) => {
     const list = readWishlist();
@@ -822,11 +816,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // Inject Cart nav link (only if Snipcart configured) — sits after Daydreams
-  if (
-    snipcartKey &&
-    navList &&
-    !navList.querySelector(".nav-cart")
-  ) {
+  if (snipcartKey && navList && !navList.querySelector(".nav-cart")) {
     const cartLi = document.createElement("li");
     cartLi.className = "nav-cart";
     cartLi.innerHTML =
@@ -847,7 +837,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
           const count = window.Snipcart.store.getState().cart.items.count || 0;
           cartLi.classList.toggle("has-items", count > 0);
-        } catch {}
+        } catch (_unused) {
+          // Snipcart not fully initialized yet — store may not be readable
+          // on the very first tick. Safe to ignore; subscribe() will retry.
+        }
       };
       update();
       window.Snipcart.store.subscribe(update);
@@ -1037,8 +1030,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       daydreamMount.querySelectorAll(".daydream-remove").forEach((btn) => {
         btn.addEventListener("click", () => {
           const list = readWishlist().filter(
-            (i) =>
-              !(i.name === btn.dataset.name && i.image === btn.dataset.image),
+            (i) => !(i.name === btn.dataset.name && i.image === btn.dataset.image),
           );
           writeWishlist(list);
           renderDaydreams();

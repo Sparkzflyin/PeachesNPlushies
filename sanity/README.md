@@ -5,9 +5,11 @@ These schemas drop into a Sanity v3 project and power the plushie data on the we
 ## One-time setup
 
 1. Create a Sanity project (if you don't have one):
+
    ```bash
    npm create sanity@latest -- --template clean --create-project "Peaches N Plushies" --dataset production
    ```
+
    Choose: **TypeScript: No**, **Output path: ../pnp-studio** (or wherever).
 
 2. Copy these schema files into your Studio project's `schemaTypes/` (or `schemas/`) folder:
@@ -17,13 +19,17 @@ These schemas drop into a Sanity v3 project and power the plushie data on the we
    - `index.js` (replaces the default index)
 
 3. Make sure `sanity.config.js` (or `.ts`) imports them:
+
    ```js
-   import { schemaTypes } from './schemaTypes';
+   import { schemaTypes } from "./schemaTypes";
    // ...
-   schema: { types: schemaTypes }
+   schema: {
+     types: schemaTypes;
+   }
    ```
 
 4. Run the Studio locally to verify:
+
    ```bash
    npm run dev
    ```
@@ -61,12 +67,15 @@ Now when you publish a `drop` document with `sendEmailOnPublish: true`, Vercel r
 ## Schemas
 
 ### `plushie`
+
 A single plushie's profile (name, photo, personality, price, status). Used by `adopt.html`.
 
 ### `drop`
+
 A scheduled restock. Has a `dropAt` datetime that drives the homepage countdown. Publishing fires the email automation.
 
 ### `collection`
+
 A series the plushies belong to (Orchard Pals, Forest Sprites, etc.). Plushies reference one collection.
 
 ## Adding your first content
