@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Page not found at Peaches N' Plushies." />
+    <meta name="author" content="Peaches & Plushies" />
+    <meta name="robots" content="noindex, follow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>This Plushie Ran Away &mdash; 404 &mdash; Peaches N' Plushies</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="Styles.css" />
+  </head>
+  <body>
+    <header class="hero-header hero-header-simple">
+      <nav>
+        <a href="index.html" class="brand-link">
+          <picture>
+            <source type="image/avif" srcset="Assets/PNPLogo.avif" />
+            <source type="image/webp" srcset="Assets/LOGO.webp 1x, Assets/LOGO@2x.webp 2x" />
+            <img
+              src="Assets/LOGO.png"
+              alt="Peaches & Plushies Logo"
+              class="brand-logo"
+              width="80"
+              height="80"
+            />
+          </picture>
+          <div class="brand-title">Peaches N' Plushies</div>
+        </a>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="store.html">Shop</a></li>
+          <li><a href="Collection.html">Collections</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li class="dropdown">
+            <a href="about.html">About</a>
+            <ul class="dropdown-content">
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="behind-the-seams.html">Behind the Seams</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="lost-plushie">
+        <div class="big-404" aria-hidden="true">404</div>
+        <h2 class="doodle-underline">This plushie ran away</h2>
+        <p>
+          The page you&rsquo;re looking for must&rsquo;ve wandered off when no
+          one was watching. Don&rsquo;t worry &mdash; the rest of the gang is
+          still hanging out at home.
+        </p>
+
+        <img
+          class="runaway"
+          alt="A plushie peeking back at you"
+          loading="lazy"
+          decoding="async"
+          width="240"
+          height="300"
+        />
+
+        <div class="actions">
+          <a href="index.html" class="btn btn-solid">Take Me Home</a>
+          <a href="Collection.html" class="btn btn-sticker">Browse the Collection</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="social-links">
+        <a href="https://www.patreon.com/c/peachesnplushies" target="_blank">Patreon</a>
+        <a href="https://www.youtube.com/channel/UCHtmTDoFKc-FiguvPR8q55g/featured" target="_blank">YouTube</a>
+        <a href="https://www.instagram.com/peachesnplushies/" target="_blank">Instagram</a>
+        <a href="https://m.facebook.com/peachesnplushies/" target="_blank">Facebook</a>
+        <a href="https://mobile.twitter.com/peachnplush" target="_blank">Twitter</a>
+      </div>
+      <div class="footer-links">
+        <a href="terms.html">Terms of Service</a>
+        <a href="care.html">Care Guide</a>
+        <a href="faq.html">FAQ</a>
+      </div>
+      <p class="copyright">
+        peachesnplushies copyright 2026, powered by
+        <a href="http://senscode.com" target="_blank" class="senscode-link">Sensor Media LLC</a>
+      </p>
+    </footer>
+
+    <script>
+      // Pick a random plushie photo as the runaway
+      (function () {
+        const n = Math.floor(Math.random() * 76) + 1;
+        const img = document.querySelector(".lost-plushie .runaway");
+        if (img) img.src = `Photos/webp/${n}.webp`;
+      })();
+    </script>    <!-- Vercel Analytics + Speed Insights (no-ops off-Vercel) -->
+    <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script>window.si=window.si||function(){(window.siq=window.siq||[]).push(arguments);};</script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
+
+    <script src="config.js"></script>
+    <script src="sanity-client.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

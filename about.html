@@ -19,11 +19,17 @@
     <header class="hero-header">
       <nav>
         <a href="index.html" class="brand-link">
-          <img
-            src="Assets/LOGO.png"
-            alt="Peaches & Plushies Logo"
-            class="brand-logo"
-          />
+          <picture>
+            <source type="image/avif" srcset="Assets/PNPLogo.avif" />
+            <source type="image/webp" srcset="Assets/LOGO.webp 1x, Assets/LOGO@2x.webp 2x" />
+            <img
+              src="Assets/LOGO.png"
+              alt="Peaches & Plushies Logo"
+              class="brand-logo"
+              width="80"
+              height="80"
+            />
+          </picture>
           <div class="brand-title">Peaches N' Plushies</div>
         </a>
         <ul>
@@ -42,14 +48,14 @@
       </nav>
       <div class="hero-text">
         <h2>About Peaches N' Plushies</h2>
-        <h3>Handcrafted with love and a little bit of magic.</h3>
+        <h3 class="sparkle">Handcrafted with love and a little bit of magic</h3>
       </div>
     </header>
 
     <main>
       <section class="about-section">
         <div class="text-content">
-          <h2>Our Story</h2>
+          <h2 class="doodle-underline">Our Story</h2>
           <p>
             My name is Teddy and I'm the fiber artist behind Peaches N'
             Plushies. The name is a tribute to my beloved pup, Peaches, who
@@ -69,12 +75,14 @@
         </div>
       </section>
 
+      <div class="section-divider" aria-hidden="true"></div>
+
       <section class="about-section">
         <div class="image-content">
           <div class="image-placeholder">insert picture of Teddy here</div>
         </div>
         <div class="text-content">
-          <h2>Meet the Maker</h2>
+          <h2 class="doodle-underline">Meet the Maker</h2>
           <p>
             Hello! I'm Teddy, the hands and heart behind every plushie. Your
             support helps me keep creating and living my dream. I love being a
@@ -86,20 +94,14 @@
             studio. It's a process fueled by coffee and a love for all things
             cute and cuddly.
           </p>
-          <p
-            style="
-              font-weight: bold;
-              color: var(--mint-green);
-              font-size: 1.6rem;
-            "
-          >
-            - Teddy
-          </p>
+          <p class="signature">&mdash; Teddy</p>
         </div>
       </section>
 
+      <div class="section-divider" aria-hidden="true"></div>
+
       <section class="philosophy-section">
-        <h2>Our Philosophy</h2>
+        <h2 class="doodle-underline">Our Philosophy</h2>
         <div class="philosophy-grid">
           <div class="philosophy-item">
             <div class="image-placeholder">insert icon/image here</div>
@@ -128,8 +130,10 @@
         </div>
       </section>
 
+      <div class="section-divider" aria-hidden="true"></div>
+
       <section class="process-gallery">
-        <h2>Behind the Seams: The Process</h2>
+        <h2 class="doodle-underline">Behind the Seams: The Process</h2>
         <div class="gallery-grid">
           <div class="image-placeholder">insert process picture 1</div>
           <div class="image-placeholder">insert process picture 2</div>
@@ -138,7 +142,7 @@
       </section>
 
       <section class="cta-section">
-        <h2>Join the Plushie Family</h2>
+        <h2 class="sparkle">Join the Plushie Family</h2>
         <p>
           The best way to support my work is through Patreon! You get access to
           high-quality photos and behind-the-scenes posts. There is also a
@@ -175,6 +179,7 @@
       </div>
       <div class="footer-links">
         <a href="terms.html">Terms of Service</a>
+        <a href="care.html">Care Guide</a>
         <a href="faq.html">FAQ</a>
       </div>
       <p class="copyright">
@@ -183,7 +188,14 @@
           >Sensor Media LLC</a
         >
       </p>
-    </footer>
+    </footer>    <!-- Vercel Analytics + Speed Insights (no-ops off-Vercel) -->
+    <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script>window.si=window.si||function(){(window.siq=window.siq||[]).push(arguments);};</script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
+
+    <script src="config.js"></script>
+    <script src="sanity-client.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

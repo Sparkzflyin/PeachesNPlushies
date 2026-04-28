@@ -42,11 +42,17 @@
     <header class="hero-header hero-header-simple">
       <nav>
         <a href="index.html" class="brand-link">
-          <img
-            src="Assets/LOGO.png"
-            alt="Peaches & Plushies Logo"
-            class="brand-logo"
-          />
+          <picture>
+            <source type="image/avif" srcset="Assets/PNPLogo.avif" />
+            <source type="image/webp" srcset="Assets/LOGO.webp 1x, Assets/LOGO@2x.webp 2x" />
+            <img
+              src="Assets/LOGO.png"
+              alt="Peaches & Plushies Logo"
+              class="brand-logo"
+              width="80"
+              height="80"
+            />
+          </picture>
           <div class="brand-title">Peaches N' Plushies</div>
         </a>
         <ul>
@@ -64,9 +70,9 @@
         </ul>
       </nav>
     </header>
-    <main class="workshop-contact" style="max-width: 100%; width: 100%">
+    <main class="workshop-contact">
       <aside class="workshop-timeline">
-        <h3>From Sketch to Squeeze</h3>
+        <h3 class="doodle-underline">From Sketch to Squeeze</h3>
         <ul>
           <li>Initial Sketch (Cream)</li>
           <li>Fabric Selection (Mint)</li>
@@ -74,7 +80,7 @@
         </ul>
       </aside>
       <section class="contact-form-section">
-        <h4>Send a Note to the Workshop</h4>
+        <h4 class="sparkle">Send a Note to the Workshop</h4>
         <form action="YOUR_FORMSPREE_URL" method="POST">
           <label for="name">Name</label>
           <input type="text" id="name" name="name" required />
@@ -109,6 +115,7 @@
       </div>
       <div class="footer-links">
         <a href="terms.html">Terms of Service</a>
+        <a href="care.html">Care Guide</a>
         <a href="faq.html">FAQ</a>
       </div>
       <p class="copyright">
@@ -117,7 +124,14 @@
           >Sensor Media LLC</a
         >
       </p>
-    </footer>
+    </footer>    <!-- Vercel Analytics + Speed Insights (no-ops off-Vercel) -->
+    <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script>window.si=window.si||function(){(window.siq=window.siq||[]).push(arguments);};</script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
+
+    <script src="config.js"></script>
+    <script src="sanity-client.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

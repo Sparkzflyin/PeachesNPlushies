@@ -22,11 +22,17 @@
     <header class="hero-header hero-header-simple">
       <nav>
         <a href="index.html" class="brand-link">
-          <img
-            src="Assets/LOGO.png"
-            alt="Peaches & Plushies Logo"
-            class="brand-logo"
-          />
+          <picture>
+            <source type="image/avif" srcset="Assets/PNPLogo.avif" />
+            <source type="image/webp" srcset="Assets/LOGO.webp 1x, Assets/LOGO@2x.webp 2x" />
+            <img
+              src="Assets/LOGO.png"
+              alt="Peaches & Plushies Logo"
+              class="brand-logo"
+              width="80"
+              height="80"
+            />
+          </picture>
           <div class="brand-title">Peaches N' Plushies</div>
         </a>
         <ul>
@@ -47,7 +53,7 @@
 
     <main>
       <section>
-        <h2>Terms of Service</h2>
+        <h2 class="doodle-underline">Terms of Service</h2>
         <p>
           Welcome to Peaches & Plushies! These terms and conditions outline the
           rules and regulations for the use of Peaches & Plushies's Website,
@@ -116,6 +122,7 @@
       </div>
       <div class="footer-links">
         <a href="terms.html">Terms of Service</a>
+        <a href="care.html">Care Guide</a>
         <a href="faq.html">FAQ</a>
       </div>
       <p class="copyright">
@@ -124,7 +131,14 @@
           >Sensor Media LLC</a
         >
       </p>
-    </footer>
+    </footer>    <!-- Vercel Analytics + Speed Insights (no-ops off-Vercel) -->
+    <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script>window.si=window.si||function(){(window.siq=window.siq||[]).push(arguments);};</script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
+
+    <script src="config.js"></script>
+    <script src="sanity-client.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

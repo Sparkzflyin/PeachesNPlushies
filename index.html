@@ -22,11 +22,17 @@
     <header class="hero-header">
       <nav>
         <a href="index.html" class="brand-link">
-          <img
-            src="Assets/LOGO.png"
-            alt="Peaches & Plushies Logo"
-            class="brand-logo"
-          />
+          <picture>
+            <source type="image/avif" srcset="Assets/PNPLogo.avif" />
+            <source type="image/webp" srcset="Assets/LOGO.webp 1x, Assets/LOGO@2x.webp 2x" />
+            <img
+              src="Assets/LOGO.png"
+              alt="Peaches & Plushies Logo"
+              class="brand-logo"
+              width="80"
+              height="80"
+            />
+          </picture>
           <div class="brand-title">Peaches N' Plushies</div>
         </a>
         <ul>
@@ -56,17 +62,50 @@
 
     <main class="main-wide">
       <section class="new-arrivals">
-        <h2>New Arrivals</h2>
-        <h4>Freshly Picked from The Orchard!</h4>
+        <h2 class="doodle-underline">New Arrivals</h2>
+        <h4 class="sparkle">Freshly Picked from The Orchard</h4>
         <div class="carousel"></div>
       </section>
 
+      <!--
+        Drop calendar — set data-drop-at to an ISO 8601 datetime
+        (with timezone offset) for the next restock. Set drop-name
+        and drop-meta to match the drop. Leave data-drop-at empty
+        to show the "TBA" idle state.
+      -->
+      <section
+        class="next-drop"
+        data-drop-at="2026-05-15T19:00:00-05:00"
+        data-drop-name="Orchard Pals: Spring Restock"
+        data-drop-meta="Friday, May 15 — 7:00pm CT"
+        aria-live="polite"
+      >
+        <p class="eyebrow">The Next Drop</p>
+        <h3 class="drop-name"></h3>
+        <p class="drop-meta"></p>
+        <div class="countdown" role="timer" aria-label="Time until next drop">
+          <div class="unit"><span class="num" data-d>0</span><span class="label">days</span></div>
+          <div class="unit"><span class="num" data-h>0</span><span class="label">hours</span></div>
+          <div class="unit"><span class="num" data-m>0</span><span class="label">min</span></div>
+          <div class="unit"><span class="num" data-s>0</span><span class="label">sec</span></div>
+        </div>
+        <a
+          href="https://www.patreon.com/c/peachesnplushies"
+          target="_blank"
+          rel="noopener"
+          class="btn btn-sticker"
+          >Get a 24h Heads-Up</a
+        >
+      </section>
+
+      <div class="section-divider" aria-hidden="true"></div>
+
       <section class="featured-collection">
         <div class="featured-image">
-          <img src="Photos/10.png" alt="Featured Collection Image" />
+          <img src="Photos/webp/10.webp" loading="lazy" decoding="async" alt="A Golden Peach plushie, our signature Orchard Pals piece" />
         </div>
         <div class="featured-text">
-          <h2>Our Signature Orchard Pals Collection</h2>
+          <h2 class="doodle-underline">Our Signature Orchard Pals Collection</h2>
           <p>
             Meet the adorable Orchard Pals! Each character is lovingly crafted
             with soft felt and charming details. A perfect companion for any
@@ -74,6 +113,101 @@
           </p>
           <a href="Collection.html" class="btn btn-solid">Explore Collection</a>
         </div>
+      </section>
+
+      <div class="section-divider" aria-hidden="true"></div>
+
+      <section class="patreon-tiers">
+        <h2 class="doodle-underline">Support the Studio</h2>
+        <p class="lede">
+          Patreon helps me keep stitching. Members get a closer look at the
+          studio, first dibs on drops, and the occasional sticker in the mail.
+        </p>
+
+        <div class="tier-grid">
+          <div class="tier-card">
+            <p class="tier-name">Sketchbook</p>
+            <p class="tier-price">$5<small>/ month</small></p>
+            <ul class="perks">
+              <li>Behind-the-scenes photos &amp; sketches</li>
+              <li>Studio voice notes &amp; updates</li>
+              <li>Member-only Discord channel</li>
+            </ul>
+            <a
+              href="https://www.patreon.com/c/peachesnplushies"
+              target="_blank"
+              rel="noopener"
+              class="btn btn-solid tier-cta"
+              >Join Sketchbook</a
+            >
+          </div>
+
+          <div class="tier-card featured">
+            <p class="tier-name">Sticker Club</p>
+            <p class="tier-price">$10<small>/ month</small></p>
+            <ul class="perks">
+              <li>Everything in Sketchbook, plus</li>
+              <li>Quarterly sticker pack in the mail</li>
+              <li>Early access to new drops (24h head start)</li>
+              <li>Vote on next collection themes</li>
+            </ul>
+            <a
+              href="https://www.patreon.com/c/peachesnplushies"
+              target="_blank"
+              rel="noopener"
+              class="btn btn-solid tier-cta"
+              >Join Sticker Club</a
+            >
+          </div>
+
+          <div class="tier-card">
+            <p class="tier-name">Workshop Friend</p>
+            <p class="tier-price">$25<small>/ month</small></p>
+            <ul class="perks">
+              <li>Everything in Sticker Club, plus</li>
+              <li>Discount code for the shop</li>
+              <li>Annual mini-print designed by me</li>
+              <li>One commission slot per year (waitlist priority)</li>
+            </ul>
+            <a
+              href="https://www.patreon.com/c/peachesnplushies"
+              target="_blank"
+              rel="noopener"
+              class="btn btn-solid tier-cta"
+              >Join Workshop Friend</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="newsletter"
+        aria-labelledby="newsletter-heading"
+      >
+        <p class="eyebrow">Stay in the loop</p>
+        <h3 id="newsletter-heading">Get the next drop, 24h early</h3>
+        <p>
+          One email when a new collection lands. No spam, no shop talk,
+          just the heads-up.
+        </p>
+        <form novalidate>
+          <label for="newsletter-email" class="visually-hidden" style="position:absolute;left:-9999px;">Email address</label>
+          <input
+            type="email"
+            id="newsletter-email"
+            name="email"
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+          />
+          <button type="submit" class="btn btn-solid">Notify Me</button>
+        </form>
+        <p class="form-success" role="status">
+          ✦ You&rsquo;re on the list. Talk soon. ✦
+        </p>
+        <p class="form-error" role="alert">
+          That didn&rsquo;t go through. Mind trying again?
+        </p>
       </section>
     </main>
 
@@ -99,6 +233,7 @@
       </div>
       <div class="footer-links">
         <a href="terms.html">Terms of Service</a>
+        <a href="care.html">Care Guide</a>
         <a href="faq.html">FAQ</a>
       </div>
       <p class="copyright">
@@ -113,8 +248,15 @@
     <div id="lightbox" class="lightbox">
       <span class="lightbox-close">&times;</span>
       <img class="lightbox-content" id="lightboxImg" />
-    </div>
+    </div>    <!-- Vercel Analytics + Speed Insights (no-ops off-Vercel) -->
+    <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script>window.si=window.si||function(){(window.siq=window.siq||[]).push(arguments);};</script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
 
+
+    <script src="config.js"></script>
+    <script src="sanity-client.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

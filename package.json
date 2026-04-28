@@ -1,0 +1,13 @@
+{
+  "name": "pnp-website",
+  "version": "1.0.0",
+  "description": "Peaches N' Plushies — static site with Vercel Functions for newsletter + Sanity webhook",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-config.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -37,22 +37,24 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="Styles.css" />
-    <link rel="preconnect" href="https://app.snipcart.com" />
-    <link rel="preconnect" href="https://cdn.snipcart.com" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.snipcart.com/themes/v3.4.1/default/snipcart.css"
-    />
+    <!-- Snipcart bootstrap (CSS, library, hidden #snipcart div) is injected
+         site-wide by script.js when SNIPCART_PUBLIC_API_KEY is configured. -->
   </head>
   <body>
     <header class="hero-header hero-header-simple">
       <nav>
         <a href="index.html" class="brand-link">
-          <img
-            src="Assets/LOGO.png"
-            alt="Peaches & Plushies Logo"
-            class="brand-logo"
-          />
+          <picture>
+            <source type="image/avif" srcset="Assets/PNPLogo.avif" />
+            <source type="image/webp" srcset="Assets/LOGO.webp 1x, Assets/LOGO@2x.webp 2x" />
+            <img
+              src="Assets/LOGO.png"
+              alt="Peaches & Plushies Logo"
+              class="brand-logo"
+              width="80"
+              height="80"
+            />
+          </picture>
           <div class="brand-title">Peaches N' Plushies</div>
         </a>
         <ul>
@@ -71,35 +73,20 @@
       </nav>
     </header>
 
-    <main
-      class="store-page"
-      style="
-        max-width: 100%;
-        width: 100%;
-        padding-top: 4rem;
-        text-align: center;
-      "
-    >
-      <h2
-        style="
-          font-family: &quot;Fredoka One&quot;, cursive;
-          color: var(--mint-green);
-          font-size: 2.8rem;
-          margin-bottom: 2rem;
-        "
-      >
-        Our Shop
-      </h2>
-      <p style="margin-bottom: 3rem; color: var(--light-brown)">
+    <main class="store-page">
+      <h2 class="doodle-underline store-heading">Our Shop</h2>
+      <p class="sparkle store-blurb">
         Browse our collection of hand-crafted plushies and accessories, ready to
         head to their forever homes.
       </p>
 
-      <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin: 2rem;">
-        <div class="product-item" style="border: 1px solid var(--light-brown); border-radius: 8px; padding: 1rem; text-align: center;">
-          <img src="https://via.placeholder.com/150" alt="Placeholder Product 1" style="max-width: 100%; height: auto; border-radius: 4px; margin-bottom: 1rem;">
-          <h3 style="color: var(--dark-green); margin-bottom: 0.5rem;">Placeholder Product 1</h3>
-          <p style="color: var(--mint-green); font-weight: bold; margin-bottom: 1rem;">$19.99</p>
+      <div class="section-divider" aria-hidden="true"></div>
+
+      <div class="product-grid">
+        <div class="product-item">
+          <img src="https://via.placeholder.com/150" alt="Placeholder Product 1" loading="lazy" decoding="async" />
+          <h3>Placeholder Product 1</h3>
+          <p class="product-price">$19.99</p>
           <button
             class="snipcart-add-item btn btn-solid"
             data-item-id="placeholder-product-01"
@@ -111,10 +98,10 @@
             Add to cart
           </button>
         </div>
-        <div class="product-item" style="border: 1px solid var(--light-brown); border-radius: 8px; padding: 1rem; text-align: center;">
-          <img src="https://via.placeholder.com/150" alt="Placeholder Product 2" style="max-width: 100%; height: auto; border-radius: 4px; margin-bottom: 1rem;">
-          <h3 style="color: var(--dark-green); margin-bottom: 0.5rem;">Placeholder Product 2</h3>
-          <p style="color: var(--mint-green); font-weight: bold; margin-bottom: 1rem;">$24.50</p>
+        <div class="product-item">
+          <img src="https://via.placeholder.com/150" alt="Placeholder Product 2" loading="lazy" decoding="async" />
+          <h3>Placeholder Product 2</h3>
+          <p class="product-price">$24.50</p>
           <button
             class="snipcart-add-item btn btn-solid"
             data-item-id="placeholder-product-02"
@@ -126,10 +113,10 @@
             Add to cart
           </button>
         </div>
-        <div class="product-item" style="border: 1px solid var(--light-brown); border-radius: 8px; padding: 1rem; text-align: center;">
-          <img src="https://via.placeholder.com/150" alt="Placeholder Product 3" style="max-width: 100%; height: auto; border-radius: 4px; margin-bottom: 1rem;">
-          <h3 style="color: var(--dark-green); margin-bottom: 0.5rem;">Placeholder Product 3</h3>
-          <p style="color: var(--mint-green); font-weight: bold; margin-bottom: 1rem;">$12.00</p>
+        <div class="product-item">
+          <img src="https://via.placeholder.com/150" alt="Placeholder Product 3" loading="lazy" decoding="async" />
+          <h3>Placeholder Product 3</h3>
+          <p class="product-price">$12.00</p>
           <button
             class="snipcart-add-item btn btn-solid"
             data-item-id="placeholder-product-03"
@@ -141,10 +128,10 @@
             Add to cart
           </button>
         </div>
-        <div class="product-item" style="border: 1px solid var(--light-brown); border-radius: 8px; padding: 1rem; text-align: center;">
-          <img src="https://via.placeholder.com/150" alt="Placeholder Product 4" style="max-width: 100%; height: auto; border-radius: 4px; margin-bottom: 1rem;">
-          <h3 style="color: var(--dark-green); margin-bottom: 0.5rem;">Placeholder Product 4</h3>
-          <p style="color: var(--mint-green); font-weight: bold; margin-bottom: 1rem;">$30.00</p>
+        <div class="product-item">
+          <img src="https://via.placeholder.com/150" alt="Placeholder Product 4" loading="lazy" decoding="async" />
+          <h3>Placeholder Product 4</h3>
+          <p class="product-price">$30.00</p>
           <button
             class="snipcart-add-item btn btn-solid"
             data-item-id="placeholder-product-04"
@@ -156,10 +143,10 @@
             Add to cart
           </button>
         </div>
-        <div class="product-item" style="border: 1px solid var(--light-brown); border-radius: 8px; padding: 1rem; text-align: center;">
-          <img src="https://via.placeholder.com/150" alt="Placeholder Product 5" style="max-width: 100%; height: auto; border-radius: 4px; margin-bottom: 1rem;">
-          <h3 style="color: var(--dark-green); margin-bottom: 0.5rem;">Placeholder Product 5</h3>
-          <p style="color: var(--mint-green); font-weight: bold; margin-bottom: 1rem;">$8.75</p>
+        <div class="product-item">
+          <img src="https://via.placeholder.com/150" alt="Placeholder Product 5" loading="lazy" decoding="async" />
+          <h3>Placeholder Product 5</h3>
+          <p class="product-price">$8.75</p>
           <button
             class="snipcart-add-item btn btn-solid"
             data-item-id="placeholder-product-05"
@@ -171,10 +158,10 @@
             Add to cart
           </button>
         </div>
-        <div class="product-item" style="border: 1px solid var(--light-brown); border-radius: 8px; padding: 1rem; text-align: center;">
-          <img src="https://via.placeholder.com/150" alt="Placeholder Product 6" style="max-width: 100%; height: auto; border-radius: 4px; margin-bottom: 1rem;">
-          <h3 style="color: var(--dark-green); margin-bottom: 0.5rem;">Placeholder Product 6</h3>
-          <p style="color: var(--mint-green); font-weight: bold; margin-bottom: 1rem;">$45.00</p>
+        <div class="product-item">
+          <img src="https://via.placeholder.com/150" alt="Placeholder Product 6" loading="lazy" decoding="async" />
+          <h3>Placeholder Product 6</h3>
+          <p class="product-price">$45.00</p>
           <button
             class="snipcart-add-item btn btn-solid"
             data-item-id="placeholder-product-06"
@@ -190,7 +177,7 @@
 
     </main>
 
-    <footer style="margin-top: 4rem">
+    <footer class="store-footer">
       <div class="social-links">
         <a href="https://www.patreon.com/c/peachesnplushies" target="_blank"
           >Patreon</a
@@ -212,6 +199,7 @@
       </div>
       <div class="footer-links">
         <a href="terms.html">Terms of Service</a>
+        <a href="care.html">Care Guide</a>
         <a href="faq.html">FAQ</a>
       </div>
       <p class="copyright">
@@ -220,16 +208,14 @@
           >Sensor Media LLC</a
         >
       </p>
-    </footer>
+    </footer>    <!-- Vercel Analytics + Speed Insights (no-ops off-Vercel) -->
+    <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script>window.si=window.si||function(){(window.siq=window.siq||[]).push(arguments);};</script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
+
+    <script src="config.js"></script>
+    <script src="sanity-client.js"></script>
     <script src="script.js"></script>
-    <script
-      async
-      src="https://cdn.snipcart.com/themes/v3.4.1/default/snipcart.js"
-    ></script>
-    <div
-      hidden
-      id="snipcart"
-      data-api-key="YOUR_PUBLIC_API_KEY"
-    ></div>
   </body>
 </html>

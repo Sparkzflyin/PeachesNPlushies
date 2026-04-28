@@ -1,0 +1,12 @@
+.env
+.env.local
+.env.*.local
+.vercel
+node_modules
+
+# Original-resolution plushie PNGs (source masters).
+# The site only ever serves Photos/webp/. Keep PNGs on local backup;
+# regenerate WebP via:
+#   ls Photos/*.png | xargs -P 4 -I {} sh -c \
+#     'convert "{}" -resize "1200x1200>" -quality 80 "Photos/webp/$(basename {} .png).webp"'
+Photos/*.png

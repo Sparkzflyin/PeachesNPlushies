@@ -1,0 +1,27 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "functions": {
+    "api/*.js": {
+      "runtime": "nodejs20.x",
+      "maxDuration": 10
+    }
+  },
+  "headers": [
+    {
+      "source": "/Photos/webp/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/Assets/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/(.*)\\.(css|js)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }]
+    }
+  ]
+}

@@ -1,86 +1,152 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  // --- Sanity hydration (runs first so the rest of the init sees real data) ---
+  // No-op if Sanity isn't configured (window.PNP_CONFIG.sanityProjectId empty).
+  if (window.PNP_SANITY && window.PNP_SANITY.isConfigured()) {
+    await Promise.all([hydrateAdoptFromSanity(), hydrateNextDropFromSanity()]).catch(
+      (err) => console.warn("[sanity] hydration failed:", err),
+    );
+  }
+
+  async function hydrateAdoptFromSanity() {
+    const grid = document.querySelector(".adopt-grid");
+    if (!grid) return;
+    let plushies;
+    try {
+      plushies = await window.PNP_SANITY.fetchPlushies();
+    } catch {
+      return;
+    }
+    if (!Array.isArray(plushies) || plushies.length === 0) return;
+
+    const escapeHTML = (s) =>
+      String(s).replace(
+        /[&<>"']/g,
+        (c) =>
+          ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;",
+          })[c],
+      );
+
+    const formatDate = (iso) => {
+      if (!iso) return "";
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return "";
+      return d.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    };
+
+    const STATUS = {
+      available: { tag: "Available", classMod: "" },
+      adopted: { tag: "Adopted", classMod: "is-adopted" },
+      "coming-soon": { tag: "Coming Soon", classMod: "" },
+      "on-hold": { tag: "On Hold", classMod: "" },
+    };
+
+    const snipcartReady = Boolean(window.PNP_CONFIG?.snipcartApiKey);
+
+    grid.innerHTML = plushies
+      .map((p) => {
+        const status = STATUS[p.status] || STATUS.available;
+        const isAdopted = p.status === "adopted";
+        const cardClass = `adopt-card grid-item ${status.classMod}`.trim();
+        const imgUrl =
+          window.PNP_SANITY.imageUrl(p.image, { w: 600, h: 750, fit: "crop", q: 80 }) ||
+          "";
+        // Choose CTA: Snipcart button (if configured + plushie has price + id),
+        // else a plain link to /store.html, else "No longer available" tag.
+        const itemId = p.snipcartId || p.slug;
+        const canCart = snipcartReady && !isAdopted && itemId && p.price != null;
+        const cta = isAdopted
+          ? `<a href="#" class="btn btn-solid adopt-cta" aria-disabled="true">No longer available</a>`
+          : canCart
+            ? `<button type="button" class="snipcart-add-item btn btn-solid adopt-cta"
+                 data-item-id="${escapeHTML(itemId)}"
+                 data-item-name="${escapeHTML(p.name || "")}"
+                 data-item-price="${Number(p.price)}"
+                 data-item-url="/adopt.html"
+                 data-item-image="${escapeHTML(imgUrl)}"
+                 data-item-description="${escapeHTML((p.personality || "").slice(0, 200))}"
+               >Adopt ${escapeHTML(p.name || "")}</button>`
+            : `<a href="store.html" class="btn btn-solid adopt-cta">Adopt ${escapeHTML(p.name || "")}</a>`;
+
+        const priceLine = isAdopted
+          ? `<p class="price">Adopted <small>thank you for the kind home</small></p>`
+          : p.price != null
+            ? `<p class="price">$${Number(p.price)} <small>adoption fee</small></p>`
+            : "";
+
+        const specs = [];
+        if (p.snack) specs.push(`<li><span class="label">Snack of choice</span><span class="value">${escapeHTML(p.snack)}</span></li>`);
+        if (p.stitchedOn) specs.push(`<li><span class="label">Stitched on</span><span class="value">${escapeHTML(formatDate(p.stitchedOn))}</span></li>`);
+        if (typeof p.weighted === "boolean") {
+          const w = p.weighted ? `Yes${p.weightGrams ? ` &middot; ${p.weightGrams}g` : ""}` : "No";
+          specs.push(`<li><span class="label">Weighted</span><span class="value">${w}</span></li>`);
+        }
+
+        const meta = [];
+        if (p.pronouns) meta.push(escapeHTML(p.pronouns));
+        if (p.collectionName) meta.push(escapeHTML(p.collectionName));
+
+        return `
+          <article class="${cardClass}" data-category="${escapeHTML(p.collectionSlug || "")}">
+            <span class="status-tag">${escapeHTML(status.tag)}</span>
+            <div class="photo-wrap">
+              ${imgUrl ? `<img src="${imgUrl}" loading="lazy" decoding="async" alt="${escapeHTML(p.name || "Plushie")}" />` : ""}
+            </div>
+            <h4 class="name">${escapeHTML(p.name || "")}</h4>
+            ${meta.length ? `<p class="pronouns">${meta.join(" &middot; ")}</p>` : ""}
+            ${p.personality ? `<p class="personality">${escapeHTML(p.personality)}</p>` : ""}
+            ${specs.length ? `<ul class="specs">${specs.join("")}</ul>` : ""}
+            ${priceLine}
+            ${cta}
+          </article>`;
+      })
+      .join("");
+  }
+
+  async function hydrateNextDropFromSanity() {
+    const dropEl = document.querySelector(".next-drop");
+    if (!dropEl) return;
+    let drop;
+    try {
+      drop = await window.PNP_SANITY.fetchNextDrop();
+    } catch {
+      return;
+    }
+    if (!drop || !drop.dropAt) return;
+
+    const friendly =
+      drop.humanMeta ||
+      new Date(drop.dropAt).toLocaleString(undefined, {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        timeZoneName: "short",
+      });
+
+    dropEl.setAttribute("data-drop-at", drop.dropAt);
+    dropEl.setAttribute("data-drop-name", drop.name || "Next Drop");
+    dropEl.setAttribute("data-drop-meta", friendly);
+    if (drop.eyebrow) {
+      const eyebrow = dropEl.querySelector(".eyebrow");
+      if (eyebrow) eyebrow.textContent = drop.eyebrow;
+    }
+  }
+
   // --- Carousel ---
   const carousel = document.querySelector(".carousel");
   if (carousel) {
     // --- Data and Setup ---
-    const allPhotos = [
-      "1.png",
-      "10.png",
-      "11.png",
-      "12.png",
-      "13.png",
-      "14.png",
-      "15.png",
-      "16.png",
-      "17.png",
-      "18.png",
-      "19.png",
-      "2.png",
-      "20.png",
-      "21.png",
-      "22.png",
-      "23.png",
-      "24.png",
-      "25.png",
-      "26.png",
-      "27.png",
-      "28.png",
-      "29.png",
-      "3.png",
-      "30.png",
-      "31.png",
-      "32.png",
-      "33.png",
-      "34.png",
-      "35.png",
-      "36.png",
-      "37.png",
-      "38.png",
-      "39.png",
-      "4.png",
-      "40.png",
-      "41.png",
-      "42.png",
-      "43.png",
-      "44.png",
-      "45.png",
-      "46.png",
-      "47.png",
-      "48.png",
-      "49.png",
-      "5.png",
-      "50.png",
-      "51.png",
-      "52.png",
-      "53.png",
-      "54.png",
-      "55.png",
-      "56.png",
-      "57.png",
-      "58.png",
-      "59.png",
-      "6.png",
-      "60.png",
-      "61.png",
-      "62.png",
-      "63.png",
-      "64.png",
-      "65.png",
-      "66.png",
-      "67.png",
-      "68.png",
-      "69.png",
-      "7.png",
-      "70.png",
-      "71.png",
-      "72.png",
-      "73.png",
-      "74.png",
-      "75.png",
-      "76.png",
-      "8.png",
-      "9.png",
-    ];
+    const allPhotos = Array.from({ length: 76 }, (_, i) => `${i + 1}.webp`);
 
     // Shuffle and pick 15 random photos
     for (let i = allPhotos.length - 1; i > 0; i--) {
@@ -102,11 +168,13 @@ document.addEventListener("DOMContentLoaded", () => {
       inner.classList.add("carousel-item-inner");
 
       const img = document.createElement("img");
-      img.src = `Photos/${photo}`;
-      img.alt = `Plushie ${photo.replace(".png", "")}`;
+      img.src = `Photos/webp/${photo}`;
+      img.alt = `Plushie ${photo.replace(".webp", "")}`;
+      img.loading = "lazy";
+      img.decoding = "async";
       img.draggable = false;
       const p = document.createElement("p");
-      p.textContent = `Plushie #${photo.replace(".png", "")}`;
+      p.textContent = `Plushie #${photo.replace(".webp", "")}`;
 
       inner.appendChild(img);
       inner.appendChild(p);
@@ -114,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       inner.addEventListener("click", () => {
         if (!hasDragged && typeof window.openLightbox === "function") {
-          window.openLightbox(`Photos/${photo}`);
+          window.openLightbox(`Photos/webp/${photo}`);
         }
       });
 
@@ -419,88 +487,104 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Background Confetti ---
-  const canvas = document.createElement("canvas");
-  canvas.id = "confetti-canvas";
-  Object.assign(canvas.style, {
-    position: "absolute",
-    top: "0",
-    left: "0",
-    width: "100%",
-    height: "100%",
-    pointerEvents: "none",
-    zIndex: "-1",
-    opacity: "0.7",
-  });
+  // --- Background Confetti (toned-down, brand-palette pastel motes) ---
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
 
-  const wrapper = document.querySelector(".site-content-wrapper");
-  if (wrapper) {
-    wrapper.appendChild(canvas);
-  } else {
-    document.body.style.position = "relative";
-    document.body.appendChild(canvas);
-  }
+  if (!prefersReducedMotion) {
+    const canvas = document.createElement("canvas");
+    canvas.id = "confetti-canvas";
+    Object.assign(canvas.style, {
+      position: "absolute",
+      top: "0",
+      left: "0",
+      width: "100%",
+      height: "100%",
+      pointerEvents: "none",
+      zIndex: "-1",
+      opacity: "0.55",
+    });
 
-  const ctx = canvas.getContext("2d");
-  let width, height;
-
-  function resize() {
-    width = window.innerWidth;
-    height = Math.max(document.body.scrollHeight, document.body.offsetHeight);
-    canvas.width = width;
-    canvas.height = height;
-  }
-  window.addEventListener("resize", resize);
-  window.addEventListener("load", resize);
-  setTimeout(resize, 500);
-  resize();
-
-  class Confetti {
-    constructor() {
-      this.reset(true);
+    const wrapper = document.querySelector(".site-content-wrapper");
+    if (wrapper) {
+      wrapper.appendChild(canvas);
+    } else {
+      document.body.style.position = "relative";
+      document.body.appendChild(canvas);
     }
-    reset(initial = false) {
-      this.x = Math.random() * width;
-      this.y = initial
-        ? Math.random() * height
-        : window.scrollY - 100;
-      this.angle = Math.random() * Math.PI * 2;
-      this.speed = Math.random() * 2 + 1;
-      this.rotation = Math.random() * Math.PI * 2;
-      this.rotationSpeed = (Math.random() - 0.5) * 0.1;
-      this.size = 5 + Math.random() * 5;
-      this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
-    }
-    update() {
-      this.y += this.speed;
-      this.x += Math.sin(this.y / 20) * 0.5;
-      this.rotation += this.rotationSpeed;
 
-      if (this.y > window.scrollY + height + 100) {
-        this.reset();
+    const ctx = canvas.getContext("2d");
+    let width, height;
+
+    function resize() {
+      width = window.innerWidth;
+      height = Math.max(document.body.scrollHeight, document.body.offsetHeight);
+      canvas.width = width;
+      canvas.height = height;
+    }
+    window.addEventListener("resize", resize);
+    window.addEventListener("load", resize);
+    setTimeout(resize, 500);
+    resize();
+
+    // Soft brand-palette colors
+    const palette = [
+      "rgba(162, 213, 198, 0.75)", // mint
+      "rgba(232, 141, 158, 0.65)", // pink
+      "rgba(255, 212, 184, 0.75)", // peach
+      "rgba(245, 197, 205, 0.65)", // pink-soft
+    ];
+
+    class Mote {
+      constructor() {
+        this.reset(true);
+      }
+      reset(initial = false) {
+        this.x = Math.random() * width;
+        this.y = initial
+          ? Math.random() * height
+          : window.scrollY - 40;
+        this.speed = 0.25 + Math.random() * 0.55; // much slower
+        this.size = 4 + Math.random() * 7;
+        this.drift = (Math.random() - 0.5) * 0.6;
+        this.driftPhase = Math.random() * Math.PI * 2;
+        this.color = palette[Math.floor(Math.random() * palette.length)];
+      }
+      update() {
+        this.y += this.speed;
+        this.x += Math.sin((this.y + this.driftPhase * 100) / 60) * this.drift;
+        if (this.y > window.scrollY + height + 60) this.reset();
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
-    draw() {
-      ctx.save();
-      ctx.translate(this.x, this.y);
-      ctx.rotate(this.rotation);
-      ctx.fillStyle = this.color;
-      ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
-      ctx.restore();
+
+    // Density scales with viewport size, capped at 30
+    const motes = Array.from(
+      { length: Math.min(30, Math.floor(window.innerWidth / 50)) },
+      () => new Mote(),
+    );
+
+    // Throttle to ~30 fps to save CPU/battery
+    let lastFrame = 0;
+    function animate(now) {
+      if (now - lastFrame > 33) {
+        ctx.clearRect(0, 0, width, height);
+        motes.forEach((m) => {
+          m.update();
+          m.draw();
+        });
+        lastFrame = now;
+      }
+      requestAnimationFrame(animate);
     }
-  }
-
-  const confetti = Array.from({ length: 100 }, () => new Confetti());
-
-  function animate() {
-    ctx.clearRect(0, 0, width, height);
-    confetti.forEach((c) => {
-      c.update();
-      c.draw();
-    });
     requestAnimationFrame(animate);
   }
-  animate();
 
   // --- Dropdown ---
   const dropdown = document.querySelector(".dropdown > a");
@@ -520,4 +604,452 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  // --- Mobile Nav Hamburger ---
+  const headerNav = document.querySelector(".hero-header nav");
+  const navList = headerNav && headerNav.querySelector(":scope > ul");
+  if (headerNav && navList) {
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "nav-toggle";
+    toggle.setAttribute("aria-label", "Toggle navigation menu");
+    toggle.setAttribute("aria-controls", "primary-nav");
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.innerHTML = "☰";
+    navList.id = "primary-nav";
+    headerNav.insertBefore(toggle, navList);
+
+    const setOpen = (open) => {
+      navList.classList.toggle("is-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.innerHTML = open ? "✕" : "☰";
+    };
+
+    toggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setOpen(!navList.classList.contains("is-open"));
+    });
+
+    // Close on outside click
+    document.addEventListener("click", (e) => {
+      if (!headerNav.contains(e.target) && navList.classList.contains("is-open")) {
+        setOpen(false);
+      }
+    });
+
+    // Close on Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && navList.classList.contains("is-open")) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    // Reset state when resizing past the mobile breakpoint
+    const mq = window.matchMedia("(min-width: 641px)");
+    mq.addEventListener("change", (ev) => {
+      if (ev.matches) setOpen(false);
+    });
+  }
+
+  // --- Wishlist (Daydream List) ---
+  const WISHLIST_KEY = "pnp:wishlist";
+
+  const readWishlist = () => {
+    try {
+      const raw = localStorage.getItem(WISHLIST_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const writeWishlist = (items) => {
+    localStorage.setItem(WISHLIST_KEY, JSON.stringify(items));
+    window.dispatchEvent(
+      new CustomEvent("wishlist:change", { detail: { items } }),
+    );
+  };
+
+  const itemKey = (item) => `${item.name}|${item.image}`;
+
+  const inWishlist = (item) =>
+    readWishlist().some((i) => itemKey(i) === itemKey(item));
+
+  const toggleWishlist = (item) => {
+    const list = readWishlist();
+    const idx = list.findIndex((i) => itemKey(i) === itemKey(item));
+    if (idx >= 0) list.splice(idx, 1);
+    else list.push(item);
+    writeWishlist(list);
+    return idx < 0; // true if added
+  };
+
+  const HEART_SVG = `
+    <svg class="heart-outline" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>
+    <svg class="heart-filled" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>`;
+
+  // Inject heart toggles into product/collection grid items
+  document.querySelectorAll(".grid-item").forEach((item) => {
+    if (item.querySelector(".wishlist-toggle")) return;
+    const nameEl = item.querySelector("h4");
+    const imgEl = item.querySelector("img");
+    const categoryEl = item.querySelector("p");
+    if (!nameEl || !imgEl) return;
+
+    const data = {
+      name: nameEl.textContent.trim(),
+      image: imgEl.getAttribute("src"),
+      category: categoryEl ? categoryEl.textContent.trim() : "",
+    };
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "wishlist-toggle";
+    btn.innerHTML = HEART_SVG;
+
+    const setState = (favorited) => {
+      btn.classList.toggle("is-favorited", favorited);
+      btn.setAttribute("aria-pressed", String(favorited));
+      btn.setAttribute(
+        "aria-label",
+        favorited
+          ? `Remove ${data.name} from your daydream list`
+          : `Add ${data.name} to your daydream list`,
+      );
+    };
+    setState(inWishlist(data));
+
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const added = toggleWishlist(data);
+      setState(added);
+      if (added) {
+        // Re-trigger pop animation if class was already there
+        btn.style.animation = "none";
+        void btn.offsetWidth;
+        btn.style.animation = "";
+      }
+    });
+
+    item.appendChild(btn);
+  });
+
+  // --- Snipcart bootstrap (sitewide if API key is configured) ---
+  const snipcartKey = window.PNP_CONFIG?.snipcartApiKey || "";
+  const snipcartVersion = window.PNP_CONFIG?.snipcartVersion || "3.7.1";
+  if (snipcartKey && !document.getElementById("snipcart")) {
+    // Preconnects + stylesheet
+    const head = document.head;
+    [
+      ["link", { rel: "preconnect", href: "https://app.snipcart.com" }],
+      ["link", { rel: "preconnect", href: "https://cdn.snipcart.com" }],
+      [
+        "link",
+        {
+          rel: "stylesheet",
+          href: `https://cdn.snipcart.com/themes/v${snipcartVersion}/default/snipcart.css`,
+        },
+      ],
+    ].forEach(([tag, attrs]) => {
+      if (head.querySelector(`${tag}[href="${attrs.href}"]`)) return;
+      const el = document.createElement(tag);
+      for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+      head.appendChild(el);
+    });
+
+    // Snipcart library
+    if (!document.querySelector('script[src*="snipcart.com"]')) {
+      const s = document.createElement("script");
+      s.async = true;
+      s.src = `https://cdn.snipcart.com/themes/v${snipcartVersion}/default/snipcart.js`;
+      document.body.appendChild(s);
+    }
+
+    // Hidden bootstrap div (Snipcart reads its data attrs to init)
+    const boot = document.createElement("div");
+    boot.id = "snipcart";
+    boot.hidden = true;
+    boot.setAttribute("data-api-key", snipcartKey);
+    document.body.appendChild(boot);
+  }
+
+  // Inject Adopt nav link (before Contact) on pages that don't already have one
+  if (navList && !navList.querySelector('a[href="adopt.html"]')) {
+    const adoptLi = document.createElement("li");
+    adoptLi.innerHTML = '<a href="adopt.html">Adopt</a>';
+    const contactLi = navList.querySelector('a[href="contact.html"]');
+    if (contactLi && contactLi.parentElement) {
+      navList.insertBefore(adoptLi, contactLi.parentElement);
+    } else {
+      const dropdownLi = navList.querySelector(".dropdown");
+      if (dropdownLi) navList.insertBefore(adoptLi, dropdownLi);
+      else navList.appendChild(adoptLi);
+    }
+  }
+
+  // Inject Daydreams nav link with badge
+  if (navList && !navList.querySelector(".nav-daydreams")) {
+    const li = document.createElement("li");
+    li.className = "nav-daydreams";
+    li.innerHTML = `<a href="daydream-list.html" aria-label="View your daydream list"><span class="heart-mark" aria-hidden="true">♡</span><span class="count" aria-hidden="true">0</span></a>`;
+
+    // Insert before the dropdown (About) so it sits among regular links
+    const dropdownLi = navList.querySelector(".dropdown");
+    if (dropdownLi) {
+      navList.insertBefore(li, dropdownLi);
+    } else {
+      navList.appendChild(li);
+    }
+
+    const updateBadge = () => {
+      const count = readWishlist().length;
+      li.classList.toggle("has-items", count > 0);
+      const countEl = li.querySelector(".count");
+      if (countEl) countEl.textContent = String(count);
+    };
+    updateBadge();
+    window.addEventListener("wishlist:change", updateBadge);
+    window.addEventListener("storage", (e) => {
+      if (e.key === WISHLIST_KEY) updateBadge();
+    });
+  }
+
+  // Inject Cart nav link (only if Snipcart configured) — sits after Daydreams
+  if (
+    snipcartKey &&
+    navList &&
+    !navList.querySelector(".nav-cart")
+  ) {
+    const cartLi = document.createElement("li");
+    cartLi.className = "nav-cart";
+    cartLi.innerHTML =
+      '<a href="#" class="snipcart-checkout" aria-label="Open cart"><span class="cart-mark" aria-hidden="true">⌂</span><span class="snipcart-items-count count" aria-hidden="true">0</span></a>';
+    const daydreamsLi = navList.querySelector(".nav-daydreams");
+    if (daydreamsLi) {
+      navList.insertBefore(cartLi, daydreamsLi.nextSibling);
+    } else {
+      const dropdownLi = navList.querySelector(".dropdown");
+      if (dropdownLi) navList.insertBefore(cartLi, dropdownLi);
+      else navList.appendChild(cartLi);
+    }
+
+    // Toggle .has-items so the badge only shows when count > 0
+    document.addEventListener("snipcart.ready", () => {
+      if (typeof window.Snipcart === "undefined") return;
+      const update = () => {
+        try {
+          const count = window.Snipcart.store.getState().cart.items.count || 0;
+          cartLi.classList.toggle("has-items", count > 0);
+        } catch {}
+      };
+      update();
+      window.Snipcart.store.subscribe(update);
+    });
+  }
+
+  // --- Newsletter signup ---
+  const newsletterEl = document.querySelector(".newsletter");
+  if (newsletterEl) {
+    const form = newsletterEl.querySelector("form");
+    const emailInput = newsletterEl.querySelector('input[type="email"]');
+    // Endpoint resolution order:
+    //   1. data-newsletter-endpoint attribute on the element (page override)
+    //   2. window.PNP_CONFIG.newsletterEndpoint (set by build-config.js)
+    //   3. /api/subscribe (Vercel Function default)
+    const endpoint =
+      newsletterEl.getAttribute("data-newsletter-endpoint") ||
+      window.PNP_CONFIG?.newsletterEndpoint ||
+      "/api/subscribe";
+
+    if (form && emailInput) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = emailInput.value.trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          newsletterEl.dataset.state = "error";
+          emailInput.focus();
+          return;
+        }
+
+        // Dev/preview mode: placeholder endpoint, no backend configured yet
+        if (!endpoint || endpoint === "YOUR_NEWSLETTER_ENDPOINT") {
+          newsletterEl.dataset.state = "success";
+          return;
+        }
+
+        try {
+          const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          newsletterEl.dataset.state = "success";
+        } catch {
+          newsletterEl.dataset.state = "error";
+        }
+      });
+    }
+  }
+
+  // --- Behind-the-Seams active step tracker ---
+  const railDots = document.querySelectorAll(".story-rail .dot");
+  const processSteps = document.querySelectorAll(".process-step");
+  if (railDots.length > 0 && processSteps.length > 0) {
+    const setActiveStep = (step) => {
+      railDots.forEach((d) => {
+        d.classList.toggle("active", d.dataset.step === String(step));
+      });
+    };
+
+    // Track which step is in the "active band" (~middle of viewport)
+    const stepObserver = new IntersectionObserver(
+      (entries) => {
+        // Pick the entry closest to the middle of the viewport
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible.length > 0) {
+          const step = visible[0].target.dataset.step;
+          if (step) setActiveStep(step);
+        }
+      },
+      {
+        // Active when section's middle crosses the upper-middle of viewport
+        rootMargin: "-30% 0% -45% 0%",
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+      },
+    );
+    processSteps.forEach((s) => stepObserver.observe(s));
+  }
+
+  // --- Next Drop Countdown ---
+  const dropEl = document.querySelector(".next-drop");
+  if (dropEl) {
+    const dropAt = dropEl.getAttribute("data-drop-at");
+    const dropName = dropEl.getAttribute("data-drop-name") || "Next Drop";
+    const dropMeta = dropEl.getAttribute("data-drop-meta") || "";
+    const nameEl = dropEl.querySelector(".drop-name");
+    const metaEl = dropEl.querySelector(".drop-meta");
+    const numD = dropEl.querySelector("[data-d]");
+    const numH = dropEl.querySelector("[data-h]");
+    const numM = dropEl.querySelector("[data-m]");
+    const numS = dropEl.querySelector("[data-s]");
+
+    if (nameEl) nameEl.textContent = dropName;
+    if (metaEl) metaEl.textContent = dropMeta;
+
+    const target = dropAt ? new Date(dropAt).getTime() : NaN;
+    const validTarget = Number.isFinite(target);
+
+    const pad = (n) => String(Math.max(0, Math.floor(n))).padStart(2, "0");
+
+    const tick = () => {
+      if (!validTarget) {
+        dropEl.dataset.state = "idle";
+        if (nameEl) nameEl.textContent = "Next drop coming soon";
+        if (metaEl) metaEl.textContent = "Date will be announced — keep an eye out!";
+        return;
+      }
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        dropEl.dataset.state = "live";
+        if (numD) numD.textContent = "0";
+        if (numH) numH.textContent = "00";
+        if (numM) numM.textContent = "00";
+        if (numS) numS.textContent = "00";
+        if (nameEl) nameEl.textContent = `${dropName} — live now!`;
+        return;
+      }
+      dropEl.dataset.state = "counting";
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+      if (numD) numD.textContent = String(days);
+      if (numH) numH.textContent = pad(hours);
+      if (numM) numM.textContent = pad(mins);
+      if (numS) numS.textContent = pad(secs);
+    };
+
+    tick();
+    if (validTarget) {
+      const interval = setInterval(tick, 1000);
+      // Clean up if user navigates away (defensive — DOMContentLoaded scope)
+      window.addEventListener("beforeunload", () => clearInterval(interval));
+    }
+  }
+
+  // Render daydream list page contents
+  const daydreamMount = document.querySelector("[data-daydream-list]");
+  if (daydreamMount) {
+    const escapeHTML = (s) =>
+      String(s).replace(
+        /[&<>"']/g,
+        (c) =>
+          ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;",
+          })[c],
+      );
+
+    const renderDaydreams = () => {
+      const items = readWishlist();
+
+      if (items.length === 0) {
+        daydreamMount.innerHTML = `
+          <div class="daydream-empty">
+            <span class="big-icon" aria-hidden="true">♡</span>
+            <h3>Your Daydream List is Empty</h3>
+            <p>When you spot a plushie that catches your eye, tap the little heart to keep them here for later.</p>
+            <a href="Collection.html" class="btn btn-solid">Browse the Collection</a>
+          </div>`;
+        return;
+      }
+
+      daydreamMount.innerHTML = `
+        <div class="product-grid">
+          ${items
+            .map(
+              (item) => `
+            <div class="grid-item">
+              <img src="${escapeHTML(item.image)}" loading="lazy" decoding="async" alt="${escapeHTML(item.name)}" />
+              <h4>${escapeHTML(item.name)}</h4>
+              <p>${escapeHTML(item.category)}</p>
+              <button type="button" class="daydream-remove"
+                data-name="${escapeHTML(item.name)}"
+                data-image="${escapeHTML(item.image)}">Remove</button>
+            </div>`,
+            )
+            .join("")}
+        </div>`;
+
+      daydreamMount.querySelectorAll(".daydream-remove").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const list = readWishlist().filter(
+            (i) =>
+              !(i.name === btn.dataset.name && i.image === btn.dataset.image),
+          );
+          writeWishlist(list);
+          renderDaydreams();
+        });
+      });
+    };
+
+    renderDaydreams();
+    window.addEventListener("wishlist:change", renderDaydreams);
+    window.addEventListener("storage", (e) => {
+      if (e.key === WISHLIST_KEY) renderDaydreams();
+    });
+  }
 });

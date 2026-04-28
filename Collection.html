@@ -45,11 +45,17 @@
     <header class="hero-header hero-header-simple">
       <nav>
         <a href="index.html" class="brand-link">
-          <img
-            src="Assets/LOGO.png"
-            alt="Peaches & Plushies Logo"
-            class="brand-logo"
-          />
+          <picture>
+            <source type="image/avif" srcset="Assets/PNPLogo.avif" />
+            <source type="image/webp" srcset="Assets/LOGO.webp 1x, Assets/LOGO@2x.webp 2x" />
+            <img
+              src="Assets/LOGO.png"
+              alt="Peaches & Plushies Logo"
+              class="brand-logo"
+              width="80"
+              height="80"
+            />
+          </picture>
           <div class="brand-title">Peaches N' Plushies</div>
         </a>
         <ul>
@@ -71,7 +77,7 @@
       <section class="behind-the-seams-banner">
         <div class="banner-content">
           <h2>Behind the Seams</h2>
-          <p>
+          <p class="sparkle">
             Every plushie is a labor of love, crafted by hand in our studio.
           </p>
         </div>
@@ -79,11 +85,11 @@
 
       <section class="plushie-details animated-section fade-in-left">
         <div class="plushie-image">
-          <img src="Photos/1.png" alt="Peachy Pal" />
+          <img src="Photos/webp/1.webp" loading="lazy" decoding="async" alt="Peachy Pal" />
         </div>
         <div class="plushie-info">
           <h2>
-            Peachy Pal<span class="heading-subtitle"
+            <span class="doodle-underline">Peachy Pal</span><span class="heading-subtitle"
               >- The Weighted Peach Plushie</span
             >
           </h2>
@@ -96,7 +102,7 @@
       <section class="plushie-series animated-section fade-in-right">
         <div class="plushie-info">
           <h3>
-            Fruit Pals Series<span class="heading-subtitle"
+            <span class="doodle-underline">Fruit Pals Series</span><span class="heading-subtitle"
               >- Meet all the friends</span
             >
           </h3>
@@ -106,16 +112,16 @@
           </p>
         </div>
         <div class="plushie-image">
-          <img src="Photos/2.png" alt="Fruit Pal" />
+          <img src="Photos/webp/2.webp" loading="lazy" decoding="async" alt="Fruit Pal" />
         </div>
       </section>
 
       <section class="plushie-details animated-section fade-in-left">
         <div class="plushie-image">
-          <img src="Photos/14.png" alt="A new plushie friend" />
+          <img src="Photos/webp/14.webp" loading="lazy" decoding="async" alt="A Forest Sprites plushie" />
         </div>
         <div class="plushie-info">
-          <h2>The Forest Sprites</h2>
+          <h2><span class="doodle-underline">The Forest Sprites</span></h2>
           <p>
             Discover the whimsical creatures from our enchanted forest
             collection, each with its own story to tell.
@@ -125,23 +131,23 @@
 
       <section class="plushie-series animated-section fade-in-right">
         <div class="plushie-info">
-          <h3>Creatures of the Deep</h3>
+          <h3><span class="doodle-underline">Creatures of the Deep</span></h3>
           <p>
             From the mysterious depths of the ocean, these cuddly companions
             bring a splash of underwater magic.
           </p>
         </div>
         <div class="plushie-image">
-          <img src="Photos/21.png" alt="A new plushie friend" />
+          <img src="Photos/webp/21.webp" loading="lazy" decoding="async" alt="A Creatures of the Deep plushie" />
         </div>
       </section>
 
       <section class="plushie-details animated-section fade-in-left">
         <div class="plushie-image">
-          <img src="Photos/33.png" alt="A new plushie friend" />
+          <img src="Photos/webp/33.webp" loading="lazy" decoding="async" alt="A Sweet Dreams plushie" />
         </div>
         <div class="plushie-info">
-          <h2>The Sweet Dreams Collection</h2>
+          <h2><span class="doodle-underline">The Sweet Dreams Collection</span></h2>
           <p>
             Designed to be the perfect bedtime buddies, these plushies are extra
             soft and ready for snuggles.
@@ -151,14 +157,14 @@
 
       <section class="plushie-series animated-section fade-in-right">
         <div class="plushie-info">
-          <h3>Mythical Menagerie</h3>
+          <h3><span class="doodle-underline">Mythical Menagerie</span></h3>
           <p>
             Legendary creatures from folklore and fantasy, brought to life in
             felt and thread for you to cherish.
           </p>
         </div>
         <div class="plushie-image">
-          <img src="Photos/49.png" alt="A new plushie friend" />
+          <img src="Photos/webp/49.webp" loading="lazy" decoding="async" alt="A Mythical Menagerie plushie" />
         </div>
       </section>
 
@@ -177,37 +183,37 @@
 
       <section class="product-grid">
         <div class="grid-item" data-category="orchard-pals">
-          <img src="Photos/5.png" alt="Peachy Pal" />
+          <img src="Photos/webp/5.webp" loading="lazy" decoding="async" alt="Peachy Pal" />
           <h4>Peachy Pal</h4>
           <p>Orchard Pals</p>
           <a href="#" class="btn btn-solid">View Details</a>
         </div>
         <div class="grid-item" data-category="orchard-pals">
-          <img src="Photos/6.png" alt="Plum Pal" />
+          <img src="Photos/webp/6.webp" loading="lazy" decoding="async" alt="Plum Pal" />
           <h4>Plum Pal</h4>
           <p>Orchard Pals</p>
           <a href="#" class="btn btn-solid">View Details</a>
         </div>
         <div class="grid-item" data-category="limited-edition">
-          <img src="Photos/7.png" alt="Teddy's Pick" />
+          <img src="Photos/webp/7.webp" loading="lazy" decoding="async" alt="Teddy's Pick" />
           <h4>Teddy's Pick</h4>
           <p>Limited Edition</p>
           <a href="#" class="btn btn-solid">View Details</a>
         </div>
         <div class="grid-item" data-category="accessories">
-          <img src="Photos/8.png" alt="Peach Pin" />
+          <img src="Photos/webp/8.webp" loading="lazy" decoding="async" alt="Peach Pin" />
           <h4>Peach Pin</h4>
           <p>Accessories</p>
           <a href="#" class="btn btn-solid">View Details</a>
         </div>
         <div class="grid-item" data-category="orchard-pals">
-          <img src="Photos/9.png" alt="Apple Pal" />
+          <img src="Photos/webp/9.webp" loading="lazy" decoding="async" alt="Apple Pal" />
           <h4>Apple Pal</h4>
           <p>Orchard Pals</p>
           <a href="#" class="btn btn-solid">View Details</a>
         </div>
         <div class="grid-item" data-category="limited-edition">
-          <img src="Photos/10.png" alt="Golden Peach" />
+          <img src="Photos/webp/10.webp" loading="lazy" decoding="async" alt="Golden Peach" />
           <h4>Golden Peach</h4>
           <p>Limited Edition</p>
           <a href="#" class="btn btn-solid">View Details</a>
@@ -237,6 +243,7 @@
       </div>
       <div class="footer-links">
         <a href="terms.html">Terms of Service</a>
+        <a href="care.html">Care Guide</a>
         <a href="faq.html">FAQ</a>
       </div>
       <p class="copyright">
@@ -245,7 +252,14 @@
           >Sensor Media LLC</a
         >
       </p>
-    </footer>
+    </footer>    <!-- Vercel Analytics + Speed Insights (no-ops off-Vercel) -->
+    <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script>window.si=window.si||function(){(window.siq=window.siq||[]).push(arguments);};</script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
+
+    <script src="config.js"></script>
+    <script src="sanity-client.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
