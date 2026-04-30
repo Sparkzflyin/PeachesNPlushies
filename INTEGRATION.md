@@ -18,6 +18,10 @@ The site works **fully without** any of this — fall back to the hardcoded plus
                                                    ├─ Mailing list: subscribers
                                                    └─ Event "drop_published" ──▶ subscribers' inboxes
 
+[Contact form]     ──POST──▶  /api/contact   ─▶ [Loops Transactional]
+                                                   ├─ Workshop notification ──▶ workshop inbox
+                                                   └─ Optional auto-reply   ──▶ submitter's inbox
+
 [Adopt button] ──Snipcart-add-item──▶ [Snipcart cart] ──checkout──▶ [Stripe via Snipcart]
 ```
 
@@ -53,6 +57,13 @@ Note your **Project ID** (you'll need it in step 4) — find it at <https://sani
      - `{{eventProperties.dropId}}`
    - Set delay to "immediately" so it fires the moment Sanity publishes a drop.
    - Publish the loop.
+5. **Contact form transactional template(s):**
+   - Loops → **Transactional** → **New template**.
+   - Subject line: e.g. `New contact: {{inquiryType}} — {{name}}`.
+   - Body — reference these data variables:
+     - `{{name}}`, `{{fromEmail}}`, `{{subject}}`, `{{message}}`, `{{inquiryType}}`, `{{submittedAt}}`.
+   - Copy the template id (from the URL or the template's settings) — that's `LOOPS_CONTACT_TRANSACTIONAL_ID`.
+   - **Optional auto-reply:** create a second transactional template that thanks the submitter for reaching out. It can reference `{{name}}`, `{{subject}}`, `{{inquiryType}}`. Copy its id into `LOOPS_CONTACT_CONFIRMATION_ID`. Skip this step if you'd rather just reply by hand.
 
 ## 3. Set up Snipcart (checkout)
 
@@ -94,6 +105,9 @@ Vercel dashboard → your project → Settings → Environment Variables. Add:
 | `LOOPS_API_KEY`           | from Loops settings                         | server only                                                                             |
 | `LOOPS_MAILING_LIST_ID`   | from Loops mailing list URL                 | server only                                                                             |
 | `LOOPS_DROP_EVENT_NAME`   | `drop_published` (must match your loop)     | server only                                                                             |
+| `LOOPS_CONTACT_TRANSACTIONAL_ID` | from Loops transactional template URL | server only — required for `/api/contact` to deliver the workshop notification          |
+| `LOOPS_CONTACT_CONFIRMATION_ID`  | optional, second transactional id     | server only — if set, sends an auto-reply back to the submitter                         |
+| `CONTACT_RECIPIENT_EMAIL`        | the workshop inbox                    | server only — where contact-form notifications are delivered                            |
 | `SANITY_WEBHOOK_SECRET`   | a strong random string you make up          | server only                                                                             |
 | `SANITY_WRITE_TOKEN`      | from Sanity → API → Tokens (Editor scope)   | server only — optional, used to mark drops as already-emailed so they don't double-send |
 | `SNIPCART_PUBLIC_API_KEY` | from Snipcart → Account → API Keys → Public | client (safe to expose)                                                                 |
@@ -135,6 +149,7 @@ Save. Now publishing a `drop` document triggers a Loops email.
 - `config.js` — public env vars, generated at build time
 - `scripts/build-config.js` — generates `config.js` from `process.env`
 - `api/subscribe.js` — `/api/subscribe` Vercel Function (Loops contact create/update)
+- `api/contact.js` — `/api/contact` Vercel Function (Loops transactional → workshop inbox)
 - `api/sanity-webhook.js` — `/api/sanity-webhook` (HMAC-verified, fires Loops event)
 - `vercel.json` — routes, function runtime, cache headers
 - `package.json` — Vercel build hook + Node 20 ESM

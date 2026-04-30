@@ -2544,6 +2544,517 @@ footer.reveal-footer {
 }
 
 /* ============================================================
+   Contact page (contact.html)
+   ============================================================ */
+
+.contact-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+.contact-hero-intro {
+  text-align: center;
+  padding: 1.5rem 1rem 0.5rem;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.contact-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--mint-green);
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+.contact-headline {
+  font-family: "Fredoka One", cursive;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  color: var(--dark-brown);
+  margin: 0 0 1rem;
+  line-height: 1.1;
+}
+
+.contact-headline-accent {
+  color: var(--pink);
+  position: relative;
+  display: inline-block;
+  transform: rotate(-3deg);
+  text-shadow:
+    0 2px 0 var(--pink-soft),
+    0 6px 16px rgba(232, 141, 158, 0.25);
+}
+
+.contact-lede {
+  color: var(--light-brown);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0 auto;
+  max-width: 560px;
+}
+
+.doodle-divider {
+  max-width: 320px;
+  height: 18px;
+  margin: 1.75rem auto 0.5rem;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 18' preserveAspectRatio='none'><path d='M4 9 Q 25 2 50 9 T 100 9 T 150 9 T 200 9 T 250 9 T 316 9' fill='none' stroke='%23ffd4b8' stroke-width='2.5' stroke-linecap='round'/><circle cx='80' cy='9' r='3' fill='%23a2d5c6'/><circle cx='160' cy='9' r='3' fill='%23e88d9e'/><circle cx='240' cy='9' r='3' fill='%23a2d5c6'/></svg>");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  opacity: 0.95;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 2rem;
+  margin-top: 2.5rem;
+  align-items: start;
+}
+
+.contact-form-card {
+  background-color: white;
+  border: 1px solid var(--cream-deep);
+  border-radius: 18px;
+  padding: 2rem;
+  box-shadow:
+    0 4px 0 var(--pink-soft),
+    0 12px 28px rgba(92, 64, 51, 0.08);
+  position: relative;
+}
+
+.contact-form-card::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 28px;
+  width: 32px;
+  height: 28px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 28'><path d='M2 6 L16 16 L30 6 L30 24 L2 24 Z' fill='%23ffd4b8' stroke='%23e88d9e' stroke-width='1.5' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-size: contain;
+  transform: rotate(-6deg);
+}
+
+.contact-form-card-head {
+  margin-bottom: 1.25rem;
+}
+
+.contact-form-card-head h2 {
+  font-family: "Fredoka One", cursive;
+  color: var(--dark-brown);
+  font-size: 1.8rem;
+  margin: 0 0 0.25rem;
+}
+
+.contact-form-card-sub {
+  color: var(--light-brown);
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.inquiry-chips {
+  border: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.inquiry-chips legend {
+  width: 100%;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--light-brown);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.chip {
+  cursor: pointer;
+}
+
+.chip input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chip > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  border: 2px solid var(--cream-deep);
+  background-color: var(--cream);
+  color: var(--light-brown);
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.chip:hover > span {
+  transform: translateY(-1px) rotate(-1deg);
+  border-color: var(--pink-soft);
+}
+
+.chip input:checked + span {
+  background-color: var(--pink);
+  border-color: var(--pink);
+  color: var(--cream);
+  box-shadow: 0 3px 0 var(--pink-soft);
+}
+
+.chip input:focus-visible + span {
+  outline: 3px solid var(--mint-green);
+  outline-offset: 2px;
+}
+
+.chip-emoji {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+/* Honeypot — visually + AT-hidden, but bots usually still fill it */
+.hp-field {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field label {
+  font-weight: 700;
+  color: var(--dark-brown);
+  font-size: 0.95rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.field-optional {
+  font-weight: 400;
+  color: var(--light-brown);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.field-counter {
+  font-weight: 400;
+  color: var(--light-brown);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.2s ease;
+}
+
+.field-counter.near-limit {
+  color: var(--pink-deep);
+  font-weight: 700;
+}
+
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form textarea {
+  border: 2px solid var(--cream-deep);
+  background-color: var(--cream);
+  border-radius: 12px;
+  padding: 0.75rem 0.9rem;
+  font-family: "Nunito", sans-serif;
+  font-size: 1rem;
+  color: var(--dark-brown);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.contact-form input[type="text"]::placeholder,
+.contact-form input[type="email"]::placeholder,
+.contact-form textarea::placeholder {
+  color: var(--light-brown);
+  opacity: 0.55;
+}
+
+.contact-form input[type="text"]:focus,
+.contact-form input[type="email"]:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--pink);
+  background-color: white;
+  box-shadow: 0 0 0 4px var(--pink-soft);
+}
+
+.contact-form textarea {
+  resize: vertical;
+  min-height: 140px;
+  line-height: 1.5;
+}
+
+.contact-submit {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  font-family: "Fredoka One", cursive;
+  font-size: 1.05rem;
+  padding: 0.75rem 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.contact-submit-arrow {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.contact-submit:hover .contact-submit-arrow {
+  transform: translateX(4px);
+}
+
+.contact-submit.is-sending {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.contact-submit.is-sending .contact-submit-label::after {
+  content: "…";
+  display: inline-block;
+  animation: contactDots 1.2s linear infinite;
+}
+
+@keyframes contactDots {
+  0%,
+  20% {
+    content: ".";
+  }
+  40% {
+    content: "..";
+  }
+  60%,
+  100% {
+    content: "…";
+  }
+}
+
+.form-feedback {
+  margin-top: 0.5rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.form-feedback[data-kind="success"] {
+  background-color: #eaf6f1;
+  color: #2f6b58;
+  border: 2px dashed var(--mint-green);
+}
+
+.form-feedback[data-kind="error"] {
+  background-color: #fbeaed;
+  color: var(--pink-deep);
+  border: 2px dashed var(--pink);
+}
+
+.contact-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.info-card {
+  border-radius: 18px;
+  padding: 1.4rem 1.4rem 1.5rem;
+  border: 1px solid rgba(92, 64, 51, 0.08);
+  box-shadow: 0 4px 14px rgba(92, 64, 51, 0.06);
+  position: relative;
+}
+
+.info-card-mint {
+  background-color: #ecf6f2;
+  border-color: var(--mint-green);
+}
+
+.info-card-cream {
+  background-color: var(--cream);
+  border-color: var(--cream-deep);
+}
+
+.info-card-peach {
+  background-color: #fff3e7;
+  border-color: var(--peach);
+}
+
+.info-card-title {
+  font-family: "Fredoka One", cursive;
+  color: var(--dark-brown);
+  font-size: 1.1rem;
+  margin: 0 0 0.6rem;
+}
+
+.info-card-stat {
+  font-family: "Fredoka One", cursive;
+  color: var(--pink-deep);
+  font-size: 1.6rem;
+  margin: 0 0 0.5rem;
+}
+
+.info-card-text {
+  margin: 0;
+  color: var(--light-brown);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.info-card-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--light-brown);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.info-card-list li::marker {
+  color: var(--pink);
+}
+
+.contact-social-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.contact-social-list a {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  text-decoration: none;
+  padding: 0.6rem 0.75rem;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.55);
+  color: var(--dark-brown);
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.contact-social-list a:hover {
+  transform: translateX(2px) rotate(-0.5deg);
+  background-color: white;
+  box-shadow: 0 4px 14px rgba(232, 141, 158, 0.18);
+}
+
+.contact-social-list .social-emoji {
+  font-size: 1.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.contact-social-list strong {
+  display: block;
+  color: var(--dark-brown);
+  font-size: 1rem;
+}
+
+.contact-social-list em {
+  display: block;
+  color: var(--light-brown);
+  font-style: normal;
+  font-size: 0.85rem;
+  margin-top: 0.1rem;
+}
+
+.faq-teaser {
+  margin: 4rem auto 0;
+  max-width: 720px;
+  text-align: center;
+  padding: 2.25rem 1.5rem;
+  background-color: var(--cream);
+  border: 2px dashed var(--mint-green);
+  border-radius: 22px;
+  position: relative;
+}
+
+.faq-teaser-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--mint-green);
+  font-weight: 700;
+  font-size: 0.8rem;
+  margin: 0 0 0.5rem;
+}
+
+.faq-teaser h3 {
+  font-family: "Fredoka One", cursive;
+  color: var(--dark-brown);
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem;
+}
+
+.faq-teaser-sub {
+  color: var(--light-brown);
+  margin: 0 0 1.5rem;
+}
+
+@media (max-width: 860px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+  .contact-form-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-page {
+    padding: 1.5rem 1rem 3rem;
+  }
+  .inquiry-chips {
+    gap: 0.4rem;
+  }
+  .chip > span {
+    padding: 0.45rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* ============================================================
    Respect reduced-motion preferences
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {

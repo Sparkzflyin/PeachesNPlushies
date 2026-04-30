@@ -62,26 +62,185 @@
         </ul>
       </nav>
     </header>
-    <main class="workshop-contact">
-      <aside class="workshop-timeline">
-        <h3 class="doodle-underline">From Sketch to Squeeze</h3>
-        <ul>
-          <li>Initial Sketch (Cream)</li>
-          <li>Fabric Selection (Mint)</li>
-          <li>Teddy's Final Hug Test</li>
-        </ul>
-      </aside>
-      <section class="contact-form-section">
-        <h4 class="sparkle">Send a Note to the Workshop</h4>
-        <form action="YOUR_FORMSPREE_URL" method="POST">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" required />
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required />
-          <label for="message">Your Message / Inquiry</label>
-          <textarea id="message" name="message" required></textarea>
-          <button type="submit" class="btn">Submit Inquiry</button>
-        </form>
+
+    <main class="contact-page">
+      <section class="contact-hero-intro">
+        <p class="contact-eyebrow">Workshop Mailbox</p>
+        <h1 class="contact-headline">Say <span class="contact-headline-accent">hi</span> to the workshop</h1>
+        <p class="contact-lede">
+          Got a custom plushie idea, a wholesale question, or just want to say hello? Drop us a note — Teddy
+          (our resident hug-tester) personally reads every message before it lands in the inbox.
+        </p>
+        <div class="doodle-divider" aria-hidden="true"></div>
+      </section>
+
+      <div class="contact-grid">
+        <section class="contact-form-card">
+          <header class="contact-form-card-head">
+            <h2 class="sparkle">Send a Note</h2>
+            <p class="contact-form-card-sub">We usually reply within 2&ndash;3 days, peach-promise.</p>
+          </header>
+
+          <fieldset class="inquiry-chips" aria-label="What's this about?">
+            <legend>What's this about?</legend>
+            <label class="chip">
+              <input type="radio" name="inquiry-type" value="commission" checked />
+              <span><span class="chip-emoji" aria-hidden="true">🧵</span> Commission</span>
+            </label>
+            <label class="chip">
+              <input type="radio" name="inquiry-type" value="general" />
+              <span><span class="chip-emoji" aria-hidden="true">💌</span> General</span>
+            </label>
+            <label class="chip">
+              <input type="radio" name="inquiry-type" value="wholesale" />
+              <span><span class="chip-emoji" aria-hidden="true">📦</span> Wholesale</span>
+            </label>
+            <label class="chip">
+              <input type="radio" name="inquiry-type" value="press" />
+              <span><span class="chip-emoji" aria-hidden="true">📰</span> Press</span>
+            </label>
+          </fieldset>
+
+          <form
+            id="contact-form"
+            class="contact-form"
+            action="/api/contact"
+            method="POST"
+            novalidate
+          >
+            <input type="hidden" name="inquiry_type" id="inquiry-type-value" value="commission" />
+            <!-- Honeypot: real users never see or fill this. Bots usually do. -->
+            <div class="hp-field" aria-hidden="true">
+              <label for="website">Website</label>
+              <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="name">Your name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  autocomplete="name"
+                  placeholder="e.g. Peach Princess"
+                />
+              </div>
+              <div class="field">
+                <label for="email">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  autocomplete="email"
+                  placeholder="hello@example.com"
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="subject">Subject <span class="field-optional">(optional)</span></label>
+              <input
+                type="text"
+                id="subject"
+                name="subject"
+                autocomplete="off"
+                placeholder="Strawberry-themed bunny commission?"
+              />
+            </div>
+
+            <div class="field">
+              <label for="message">
+                Your message
+                <span class="field-counter" id="message-counter" aria-live="polite">0 / 1000</span>
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                rows="6"
+                maxlength="1000"
+                required
+                placeholder="Tell us about the plushie of your dreams — colors, mood, size, references…"
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-solid contact-submit">
+              <span class="contact-submit-label">Send to the workshop</span>
+              <span class="contact-submit-arrow" aria-hidden="true">→</span>
+            </button>
+
+            <div class="form-feedback" id="form-feedback" role="status" aria-live="polite" hidden></div>
+          </form>
+        </section>
+
+        <aside class="contact-aside">
+          <article class="info-card info-card-mint">
+            <h3 class="info-card-title">Reply window</h3>
+            <p class="info-card-stat"><strong>2&ndash;3 days</strong></p>
+            <p class="info-card-text">
+              We answer messages by hand between stitches. If it's been longer than a week, please nudge us —
+              sometimes notes wander into the spam felt-pile.
+            </p>
+          </article>
+
+          <article class="info-card info-card-cream">
+            <h3 class="info-card-title">For commissions, please include</h3>
+            <ul class="info-card-list">
+              <li>A description or rough sketch of the plushie</li>
+              <li>Approximate size (palm-sized? lap-sized?)</li>
+              <li>Color or fabric preferences</li>
+              <li>Your timeline, if any</li>
+            </ul>
+          </article>
+
+          <article class="info-card info-card-peach">
+            <h3 class="info-card-title">Other ways to reach us</h3>
+            <ul class="contact-social-list">
+              <li>
+                <a href="https://www.instagram.com/peachesnplushies/" target="_blank" rel="noopener">
+                  <span class="social-emoji" aria-hidden="true">📸</span>
+                  <span>
+                    <strong>Instagram</strong>
+                    <em>DMs welcome — fastest for quick questions</em>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.patreon.com/c/peachesnplushies" target="_blank" rel="noopener">
+                  <span class="social-emoji" aria-hidden="true">🎀</span>
+                  <span>
+                    <strong>Patreon</strong>
+                    <em>Behind-the-scenes &amp; early peeks</em>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.youtube.com/channel/UCHtmTDoFKc-FiguvPR8q55g/featured"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <span class="social-emoji" aria-hidden="true">🎬</span>
+                  <span>
+                    <strong>YouTube</strong>
+                    <em>Stitch-along videos &amp; studio vlogs</em>
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </article>
+        </aside>
+      </div>
+
+      <section class="faq-teaser">
+        <p class="faq-teaser-eyebrow">Quick question?</p>
+        <h3>You might find your answer faster on the FAQ.</h3>
+        <p class="faq-teaser-sub">
+          Shipping, materials, care, returns — the most common questions live there, all in one cozy spot.
+        </p>
+        <a href="faq.html" class="btn btn-sticker">Peek at the FAQ →</a>
       </section>
     </main>
 
@@ -103,6 +262,121 @@
         <a href="http://senscode.com" target="_blank" class="senscode-link">Sensor Media LLC</a>
       </p>
     </footer>
+
+    <script>
+      // Inquiry-type chips → mirror selection into the hidden form field
+      const chipInputs = document.querySelectorAll('input[name="inquiry-type"]');
+      const inquiryHidden = document.getElementById("inquiry-type-value");
+      chipInputs.forEach((input) => {
+        input.addEventListener("change", () => {
+          if (input.checked) inquiryHidden.value = input.value;
+        });
+      });
+
+      // Live character counter for the message field
+      const messageEl = document.getElementById("message");
+      const counterEl = document.getElementById("message-counter");
+      const max = Number(messageEl.getAttribute("maxlength")) || 1000;
+      const updateCounter = () => {
+        const len = messageEl.value.length;
+        counterEl.textContent = `${len} / ${max}`;
+        counterEl.classList.toggle("near-limit", len > max * 0.9);
+      };
+      messageEl.addEventListener("input", updateCounter);
+      updateCounter();
+
+      // Form submission — POSTs JSON to /api/contact (Loops transactional email).
+      const form = document.getElementById("contact-form");
+      const feedback = document.getElementById("form-feedback");
+      const submitBtn = form.querySelector(".contact-submit");
+      const setFeedback = (kind, html) => {
+        feedback.hidden = false;
+        feedback.dataset.kind = kind;
+        feedback.innerHTML = html;
+      };
+
+      const errorMessages = {
+        missing_name: "Please tell us your name so Teddy knows who to write back to.",
+        invalid_email: "That email looks a little off — could you double-check it?",
+        missing_message: "Don't forget the message itself!",
+        invalid_body: "Something looked off with the form data. Mind trying again?",
+        missing_loops_api_key:
+          "The mail slot isn't fully wired up on our end yet — please reach out via Instagram DMs while we sort it.",
+        missing_transactional_id:
+          "The mail slot isn't fully wired up on our end yet — please reach out via Instagram DMs while we sort it.",
+        missing_recipient_email:
+          "The mail slot isn't fully wired up on our end yet — please reach out via Instagram DMs while we sort it.",
+        loops_send_failed:
+          "Our mail relay hiccupped on the way over. Please try again in a minute, or DM us on Instagram.",
+        loops_unreachable:
+          "Couldn't reach our mail relay right now. Check your connection and give it another go?",
+      };
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.classList.add("is-sending");
+        feedback.hidden = true;
+
+        const payload = {
+          name: document.getElementById("name").value.trim(),
+          email: document.getElementById("email").value.trim(),
+          subject: document.getElementById("subject").value.trim(),
+          message: document.getElementById("message").value.trim(),
+          inquiry_type: document.getElementById("inquiry-type-value").value,
+          website: document.getElementById("website").value, // honeypot
+        };
+
+        try {
+          const res = await fetch(form.getAttribute("action"), {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+
+          let json = {};
+          try {
+            json = await res.json();
+          } catch {
+            /* server returned no JSON */
+          }
+
+          if (res.ok && json.ok) {
+            setFeedback(
+              "success",
+              "🍑 Got it! Your message landed safely in the workshop. We'll write back within 2&ndash;3 days."
+            );
+            form.reset();
+            // Reset chips back to default + counter
+            const defaultChip = document.querySelector('input[name="inquiry-type"][value="commission"]');
+            if (defaultChip) {
+              defaultChip.checked = true;
+              inquiryHidden.value = "commission";
+            }
+            updateCounter();
+          } else {
+            const friendly =
+              errorMessages[json.error] ||
+              "Hmm, something snagged on the way over. Please try again, or DM us on Instagram.";
+            setFeedback("error", friendly);
+          }
+        } catch {
+          setFeedback("error", errorMessages.loops_unreachable);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove("is-sending");
+        }
+      });
+    </script>
+
     <!-- Vercel Analytics + Speed Insights (no-ops off-Vercel) -->
     <script>
       window.va =
