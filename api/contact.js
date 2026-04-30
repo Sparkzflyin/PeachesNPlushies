@@ -64,7 +64,9 @@ async function readErrorDetail(response) {
 }
 
 function clampStr(value, max) {
-  return String(value ?? "").trim().slice(0, max);
+  return String(value ?? "")
+    .trim()
+    .slice(0, max);
 }
 
 function validate(body) {
@@ -175,7 +177,7 @@ export default async function handler(req, res) {
       if (!confirmation.ok) {
         console.warn(
           `[contact] confirmation send failed (status=${confirmation.status}):`,
-          confirmation.detail
+          confirmation.detail,
         );
       }
     }

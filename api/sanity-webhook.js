@@ -152,7 +152,7 @@ export default async function handler(req, res) {
     return res.status(HTTP_INTERNAL_ERROR).json({ error: "missing_env" });
   }
 
-  let rawBody = "";
+  let rawBody;
   try {
     rawBody = await readRawBody(req);
   } catch (readErr) {

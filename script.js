@@ -185,7 +185,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             `<li><span class="label">Stitched on</span><span class="value">${escapeHTML(formatDate(p.stitchedOn))}</span></li>`,
           );
         if (typeof p.weighted === "boolean") {
-          const weightSuffix = p.weightGrams ? ` &middot; ${p.weightGrams}g` : "";
+          const grams = Number(p.weightGrams);
+          const weightSuffix = Number.isFinite(grams) && grams > 0 ? ` &middot; ${grams}g` : "";
           const w = p.weighted ? `Yes${weightSuffix}` : "No";
           specs.push(`<li><span class="label">Weighted</span><span class="value">${w}</span></li>`);
         }
@@ -309,7 +310,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); 
         }
         .carousel.grabbing { cursor: grabbing; }
-        .carousel-track { display: flex; align-items: center; padding: 3rem 0; gap: 1.5rem; }
+        .carousel-track { display: flex; align-items: center; padding: 4.5rem 0; gap: 2.25rem; }
         .carousel-item { 
             flex-shrink: 0; 
             transition: transform 0.1s ease-out, opacity 0.1s ease-out, box-shadow 0.4s ease !important; 
@@ -328,7 +329,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       velocity = 0,
       animationFrame;
     const friction = 0.95,
-      scrollSpeed = 0.5;
+      scrollSpeed = 1.2;
 
     // We need to wait for layout to measure correctly
     setTimeout(() => {
@@ -525,7 +526,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   );
   headingsToInterlace.forEach((el) => {
     const words = el.textContent.trim().split(/\s+/);
-    el.innerHTML = words.map((word) => `<span class="fat-word">${word}</span>`).join(" ");
+    el.innerHTML = words
+      .map((word) => `<span class="fat-word">${escapeHTML(word)}</span>`)
+      .join(" ");
   });
 
   // --- Reveal Footer ---
@@ -561,15 +564,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.openLightbox = (imgSrc, imgAlt = "Plushie photo") => {
       lightboxImg.src = imgSrc;
       lightboxImg.alt = imgAlt;
+      lightbox.hidden = false;
       lightbox.classList.add("active");
-      lightbox.setAttribute("aria-hidden", "false");
     };
 
     const closeLightbox = () => {
       lightbox.classList.remove("active");
-      lightbox.setAttribute("aria-hidden", "true");
       setTimeout(() => {
-        lightboxImg.src = "";
+        lightbox.hidden = true;
         lightboxImg.alt = "";
       }, 300);
     };

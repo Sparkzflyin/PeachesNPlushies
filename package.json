@@ -7,12 +7,25 @@
   "scripts": {
     "build": "node scripts/build-config.js",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:css": "stylelint \"**/*.css\"",
+    "lint:html": "html-validate \"*.html\"",
+    "lint:all": "npm run lint && npm run lint:css && npm run lint:html",
+    "qa": "npm run format:check && npm run lint:all"
   },
   "engines": {
     "node": ">=20"
   },
   "devDependencies": {
-    "prettier": "^3.3.0"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.2.1",
+    "eslint-plugin-sonarjs": "^4.0.3",
+    "globals": "^17.5.0",
+    "html-validate": "^10.13.1",
+    "prettier": "^3.3.0",
+    "stylelint": "^17.9.1",
+    "stylelint-config-standard": "^40.0.0"
   }
 }

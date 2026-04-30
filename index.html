@@ -4,7 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="description" content="Hand-sewn felt plushies and accessories from Peaches & Plushies." />
     <meta name="author" content="Peaches & Plushies" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#a2d5c6" />
+    <meta name="color-scheme" content="light" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="icon" type="image/png" href="Assets/LOGO.png" />
+    <link rel="apple-touch-icon" href="Assets/LOGO.png" />
     <meta name="robots" content="index, follow" />
 
     <title>Peaches & Plushies - Home</title>
@@ -54,9 +61,18 @@
 
     <main class="main-wide">
       <section class="new-arrivals">
-        <h2 class="doodle-underline">New Arrivals</h2>
-        <h4 class="sparkle">Freshly Picked from The Orchard</h4>
-        <div class="carousel"></div>
+        <div class="new-arrivals-panel">
+          <span class="panel-doodle panel-doodle-tl" aria-hidden="true">✦</span>
+          <span class="panel-doodle panel-doodle-tr" aria-hidden="true">✿</span>
+          <span class="panel-doodle panel-doodle-bl" aria-hidden="true">✿</span>
+          <span class="panel-doodle panel-doodle-br" aria-hidden="true">✦</span>
+          <h2 class="doodle-underline">New Arrivals</h2>
+          <h4 class="sparkle">Freshly Picked from The Orchard</h4>
+          <div class="carousel"></div>
+          <div class="new-arrivals-cta">
+            <a href="store.html" class="btn btn-sticker">Shop new arrivals →</a>
+          </div>
+        </div>
       </section>
 
       <!--
@@ -215,11 +231,16 @@
     </footer>
 
     <!-- Lightbox Modal — overlay around an enlarged plushie photo. The img's
-         alt is set dynamically by openLightbox() so it always describes the
-         currently-shown plushie. -->
-    <div id="lightbox" class="lightbox" aria-hidden="true">
+         alt + src are set dynamically by openLightbox() so it always describes
+         the currently-shown plushie. -->
+    <div id="lightbox" class="lightbox" hidden>
       <button type="button" class="lightbox-close" aria-label="Close lightbox">&times;</button>
-      <img class="lightbox-content" id="lightboxImg" alt="" />
+      <img
+        class="lightbox-content"
+        id="lightboxImg"
+        src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA="
+        alt=""
+      />
     </div>
     <!-- Vercel Analytics + Speed Insights (no-ops off-Vercel) -->
     <script>

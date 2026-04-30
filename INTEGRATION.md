@@ -97,22 +97,22 @@ Walk through the prompts. The `vercel.json` and `package.json` are already confi
 
 Vercel dashboard → your project → Settings → Environment Variables. Add:
 
-| Name                      | Value                                       | Where it's used                                                                         |
-| ------------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------- |
-| `SANITY_PROJECT_ID`       | from Sanity dashboard                       | client + server                                                                         |
-| `SANITY_DATASET`          | `production` (or yours)                     | client + server                                                                         |
-| `SANITY_API_VERSION`      | `2024-01-01`                                | client + server                                                                         |
-| `LOOPS_API_KEY`           | from Loops settings                         | server only                                                                             |
-| `LOOPS_MAILING_LIST_ID`   | from Loops mailing list URL                 | server only                                                                             |
-| `LOOPS_DROP_EVENT_NAME`   | `drop_published` (must match your loop)     | server only                                                                             |
-| `LOOPS_CONTACT_TRANSACTIONAL_ID` | from Loops transactional template URL | server only — required for `/api/contact` to deliver the workshop notification          |
-| `LOOPS_CONTACT_CONFIRMATION_ID`  | optional, second transactional id     | server only — if set, sends an auto-reply back to the submitter                         |
-| `CONTACT_RECIPIENT_EMAIL`        | the workshop inbox                    | server only — where contact-form notifications are delivered                            |
-| `SANITY_WEBHOOK_SECRET`   | a strong random string you make up          | server only                                                                             |
-| `SANITY_WRITE_TOKEN`      | from Sanity → API → Tokens (Editor scope)   | server only — optional, used to mark drops as already-emailed so they don't double-send |
-| `SNIPCART_PUBLIC_API_KEY` | from Snipcart → Account → API Keys → Public | client (safe to expose)                                                                 |
-| `SNIPCART_VERSION`        | e.g. `3.7.1`                                | client. Pin so vendor updates can't break checkout silently                             |
-| `SITE_ORIGIN`             | `https://yourdomain.vercel.app`             | optional, for canonical URLs                                                            |
+| Name                             | Value                                       | Where it's used                                                                         |
+| -------------------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `SANITY_PROJECT_ID`              | from Sanity dashboard                       | client + server                                                                         |
+| `SANITY_DATASET`                 | `production` (or yours)                     | client + server                                                                         |
+| `SANITY_API_VERSION`             | `2024-01-01`                                | client + server                                                                         |
+| `LOOPS_API_KEY`                  | from Loops settings                         | server only                                                                             |
+| `LOOPS_MAILING_LIST_ID`          | from Loops mailing list URL                 | server only                                                                             |
+| `LOOPS_DROP_EVENT_NAME`          | `drop_published` (must match your loop)     | server only                                                                             |
+| `LOOPS_CONTACT_TRANSACTIONAL_ID` | from Loops transactional template URL       | server only — required for `/api/contact` to deliver the workshop notification          |
+| `LOOPS_CONTACT_CONFIRMATION_ID`  | optional, second transactional id           | server only — if set, sends an auto-reply back to the submitter                         |
+| `CONTACT_RECIPIENT_EMAIL`        | the workshop inbox                          | server only — where contact-form notifications are delivered                            |
+| `SANITY_WEBHOOK_SECRET`          | a strong random string you make up          | server only                                                                             |
+| `SANITY_WRITE_TOKEN`             | from Sanity → API → Tokens (Editor scope)   | server only — optional, used to mark drops as already-emailed so they don't double-send |
+| `SNIPCART_PUBLIC_API_KEY`        | from Snipcart → Account → API Keys → Public | client (safe to expose)                                                                 |
+| `SNIPCART_VERSION`               | e.g. `3.7.1`                                | client. Pin so vendor updates can't break checkout silently                             |
+| `SITE_ORIGIN`                    | `https://yourdomain.vercel.app`             | optional, for canonical URLs                                                            |
 
 Re-deploy (`npx vercel --prod`) so the build script picks up the new env vars and writes them into `config.js`.
 
